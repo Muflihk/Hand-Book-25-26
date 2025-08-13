@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WMO Arts and Science College - Student Handbook</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Floating Home Button -->
+    <button id="homeBtn" class="home-floating" onclick="scrollToTop()">
+        🏠
+    </button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <h1>WMO Arts and Science College</h1>
+                <p>Student Handbook 2025-26</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- College Prayer Section -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('prayer')">
+                    <div class="btn-content">
+                        <span class="btn-icon">🙏</span>
+                        <span class="btn-text">College Prayer</span>
+                    </div>
+                    <span class="arrow" id="prayer-arrow">▼</span>
+                </button>
+                <div id="prayer" class="section-content">
+                    <div class="content-wrapper">
+                        <p class="prayer-text">
+                            "O Lord, grant us the wisdom to seek knowledge,<br>
+                            The strength to pursue excellence,<br>
+                            And the humility to serve humanity.<br>
+                            Guide us in our academic journey<br>
+                            And help us build a better tomorrow.<br>
+                            Amen."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About College Section -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('about')">
+                    <div class="btn-content">
+                        <span class="btn-icon">🎓</span>
+                        <span class="btn-text">About WMO Arts and Science College</span>
+                    </div>
+                    <span class="arrow" id="about-arrow">▼</span>
+                </button>
+                <div id="about" class="section-content">
+                    <div class="content-wrapper">
+                        <p>WMO Arts and Science College is an institution devoted to foster academic excellence and complete development. The campus is situated in the midst of the magnificent western Ghats giving a breathtaking background for the academic pursuit.</p>
+                        
+                        <p>The college is affiliated to the esteemed University of Calicut; the institution continues to attain rapid growth driven by extreme commitment to provide an inspiring learning environment for higher education.</p>
+                        
+                        <p>Offering diverse range of UG and PG programs in Arts, Science and commerce, we aim to prepare the students to chisel their knowledge and skills which are necessary to navigate life's challenges.</p>
+                        
+                        <div class="achievements">
+                            <h3>Recent Achievements</h3>
+                            <ul>
+                                <li>NAAC A Grade with 3.06 CGPA</li>
+                                <li>72nd rank in KIRF Kerala State Ranking</li>
+                                <li>PM-USHA Grant of Rs. 6.5 crore</li>
+                                <li>ISO 9001:2015 Quality Certification</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vision and Mission Section -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('vision')">
+                    <div class="btn-content">
+                        <span class="btn-icon">🎯</span>
+                        <span class="btn-text">Vision and Mission</span>
+                    </div>
+                    <span class="arrow" id="vision-arrow">▼</span>
+                </button>
+                <div id="vision" class="section-content">
+                    <div class="content-wrapper">
+                        <div class="vision-mission">
+                            <div class="vision">
+                                <h3>Vision</h3>
+                                <p>Establish academic and peaceful atmosphere conducive to intellectual inquiry and personality development with a holistic perspective</p>
+                            </div>
+                            <div class="mission">
+                                <h3>Mission</h3>
+                                <p>Strive for academic excellence, creativity and social commitment to the citizens especially the backward minorities, Orphans and destitute, upholding the ethical and moral values</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Management Committee Section -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('management')">
+                    <div class="btn-content">
+                        <span class="btn-icon">👥</span>
+                        <span class="btn-text">Management Committee</span>
+                    </div>
+                    <span class="arrow" id="management-arrow">▼</span>
+                </button>
+                <div id="management" class="section-content">
+                    <div class="content-wrapper">
+                        <p><em>Management Committee Details Table - See printed handbook for complete information</em></p>
+                        <div class="key-positions">
+                            <div class="position">
+                                <strong>President:</strong> Mr. P.P Abdul Khader
+                            </div>
+                            <div class="position">
+                                <strong>General Secretary:</strong> Mr. K.K. Ahammed Haji
+                            </div>
+                            <div class="position">
+                                <strong>Principal-in-Charge:</strong> Dr. Viji Paul
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Academic Programs Section -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('programs')">
+                    <div class="btn-content">
+                        <span class="btn-icon">📚</span>
+                        <span class="btn-text">Academic Programs and Departments</span>
+                    </div>
+                    <span class="arrow" id="programs-arrow">▼</span>
+                </button>
+                <div id="programs" class="section-content">
+                    <div class="content-wrapper">
+                        <div class="departments-grid">
+                            <div class="department-card">
+                                <h4>Department of Arabic</h4>
+                                <p>B.A. Arabic Language and Literature, M.A. Arabic Language and Literature</p>
+                                <small>Email: arabicdeptwmo@gmail.com</small>
+                            </div>
+                            <div class="department-card">
+                                <h4>Department of Chemistry</h4>
+                                <p>BSc Chemistry Honours</p>
+                                <small>Email: dwmochemistry@gmail.com</small>
+                            </div>
+                            <div class="department-card">
+                                <h4>Department of Computer Science</h4>
+                                <p>BCA</p>
+                                <small>Email: iqacwmoc.cs@gmail.com</small>
+                            </div>
+                            <div class="department-card">
+                                <h4>Department of Commerce (Co-op)</h4>
+                                <p>B.Com Honours (Co-Operation), M.Com - Finance</p>
+                                <small>Email: iqacpgdcom@gmail.com</small>
+                            </div>
+                            <div class="department-card">
+                                <h4>Department of Commerce (CA)</h4>
+                                <p>B.Com (Computer Application)</p>
+                                <small>Email: bcomca83@gmail.com</small>
+                            </div>
+                            <div class="department-card">
+                                <h4>Department of Economics</h4>
+                                <p>BA Economics</p>
+                                <small>Email: wmoeconomics5@gmail.com</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Department of Arabic Details -->
+            <section class="expandable-section">
+                <button class="section-btn" onclick="toggleSection('arabic')">
+                    <div class="btn-content">
+                        <span class="btn-icon">📖</span>
+                        <span class="btn-text">Department of Arabic - Detailed Information</span>
+                    </div>
+                    <span class="arrow" id="arabic-arrow">▼</span>
+                </button>
+                <div id="arabic" class="section-content">
+                    <div class="content-wrapper">
+                        <div class="department-detail">
+                            <h3>About Department</h3>
+                            <p>The Department of Arabic came into existence in August 1995, the same year the college was founded. In 2002, it expanded to include postgraduate studies with the introduction of the M.A. Arabic programme.</p>
+                            
+                            <p>Currently, the department provides undergraduate and postgraduate courses in Arabic, as well as various common and open courses that are available to students from different disciplines.</p>
+
+                            <h3>Faculty Members</h3>
+                            <div class="faculty-grid">
+                                <div class="faculty-card">
+                                    <h4>Dr. Najmuddeen P</h4>
+                                    <p>Assistant Professor & Head, Research Guide</p>
+                                    <p>M.Phil., Ph.D.</p>
+                                    <p>📧 najmuwmo@gmail.com</p>
+                                    <p>📱 9947786664</p>
+                                </div>
+                                <div class="faculty-card">
+                                    <h4>Ms. Shaila K.H.</h4>
+                                    <p>Assistant Professor & Research Scholar</p>
+                                    <p>MA. B.Ed., NET</p>
+                                    <p>📧 saailakh@gmail.com</p>
+                                    <p>📱 9947176764</p>
+                                </div>
+                                <div class="faculty-card">
+                                    <h4>Dr. Yoosuf. V.K.</h4>
+                                    <p>Assistant Professor, Research Guide</p>
+                                    <p>MA, Ph.D.</p>
+                                    <p>📧 dr.ymnadwi@gmail.com</p>
+                                    <p>📱 9387806050</p>
+                                </div>
+                            </div>
+
+                            <h3>Programmes Offered</h3>
+                            <ul>
+                                <li><strong>B.A. Arabic Language and Literature</strong></li>
+                                <li><strong>M.A. Arabic Language and Literature</strong></li>
+                            </ul>
+
+                            <h3>Programme Outcomes - BA Arabic</h3>
+                            <div class="outcomes">
+                                <div class="outcome-item">
+                                    <strong>PO1:</strong> Demonstrate proficiency in oral and written communication in Arabic, multilingual translation and intermediation and professional skills in Arabic.
+                                </div>
+                                <div class="outcome-item">
+                                    <strong>PO2:</strong> Comprehend concepts and apply conceptual knowledge in the fields of Arabic language, literature, culture, art and history.
+                                </div>
+                                <div class="outcome-item">
+                                    <strong>PO3:</strong> Make use of technology to enhance language skills, professional skills and effective communication.
+                                </div>
+                            </div>
+
+                            <h3>Syllabus Information</h3>
+                            <p><em>Complete syllabus tables for all semesters are available in the printed handbook.</em></p>
+                            
+                            <div class="semester-overview">
+                                <h4>Course Structure Overview:</h4>
+                                <ul>
+                                    <li><strong>Semester 1-2:</strong> Foundation courses including Arabic Short Story, Grammar, Translation basics</li>
+                                    <li><strong>Semester 3-4:</strong> Classical and Modern Literature, Arabic Morphology</li>
+                                    <li><strong>Semester 5-6:</strong> Advanced courses in Rhetorics, Literary Criticism, and Project Work</li>
+                                </ul>
+                            </div>
+
+                            <h3>Certificate Courses</h3>
+                            <ul>
+                                <li>Professional Arabic</li>
+                                <li>Basics of simultaneous interpretation</li>
+                            </ul>
+
+                            <h3>Tutors in Charge</h3>
+                            <p><em>Class-wise tutor assignment table available in printed handbook</em></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 WMO Arts and Science College. All rights reserved.</p>
+            <p>Muttil, Wayanad, Kerala</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
