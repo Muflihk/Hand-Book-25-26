@@ -1,539 +1,476 @@
-/* styles.css */
 
-* {
+/* Simple Image Viewer CSS with Smooth Transitions */
+html, body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-blue: #2563eb;
-    --secondary-blue: #3b82f6;
-    --light-blue: #dbeafe;
-    --dark-blue: #1e40af;
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
-    --white: #ffffff;
-    --bg-gray: #f8fafc;
-    --border-color: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Smooth Scrolling Physics */
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 20px;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    line-height: 1.6;
-    color: var(--text-dark);
-    background-color: var(--bg-gray);
-    /* iOS-style momentum scrolling */
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Header Styles */
-.header {
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-    color: var(--white);
-    padding: 2rem 0;
-    text-align: center;
-    box-shadow: var(--shadow);
-}
-
-.logo-section h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.logo-section p {
-    font-size: 1.2rem;
-    opacity: 0.9;
-}
-
-/* Floating Home Button */
-.home-floating {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    background: var(--primary-blue);
-    color: var(--white);
-    border: none;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    /* Smooth floating button physics */
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.home-floating:hover {
-    background: var(--dark-blue);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-}
-
-.home-floating:active {
-    transform: translateY(-1px) scale(0.95);
-    transition: transform 0.1s ease-out;
-}
-
-/* Main Content */
-.main-content {
-    padding: 2rem 0;
-    min-height: calc(100vh - 200px);
-}
-
-/* Expandable Sections with Natural Physics */
-.expandable-section {
-    margin-bottom: 1rem;
-    background: var(--white);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
+    background: #222;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
     overflow: hidden;
-    /* Natural spring animation */
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.expandable-section:hover {
-    box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-}
-
-.section-btn {
-    width: 100%;
-    background: var(--white);
-    border: none;
-    padding: 1.2rem 1.5rem;
-    text-align: left;
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #4f46e5;
-    cursor: pointer;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    user-select: none;
+}
+
+/* Control bar */
+.control-bar {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
     justify-content: space-between;
-    /* Natural easing transition */
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border-bottom: 1px solid var(--border-color);
-    font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: 0.2px;
-    line-height: 1.5;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
 }
 
-.section-btn:hover {
-    background: #f0f9ff;
-    color: #1e40af;
-    border-bottom-color: var(--primary-blue);
-    transform: translateY(-1px);
-}
-
-.section-btn:active {
-    background: #dbeafe;
-    /* Touch-friendly bounce */
-    transform: scale(0.98);
-    transition: transform 0.1s ease-out;
-}
-
-.btn-content {
+.nav-controls {
     display: flex;
     align-items: center;
-    text-align: left;
-    flex: 1;
+    gap: 20px;
 }
 
-.btn-icon {
-    margin-right: 16px;
-    font-size: 1.3em;
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.btn-text {
-    font-size: 1rem;
-    line-height: 1.4;
+/* Table of Contents Dropdown */
+.toc-container {
+    position: relative;
+    display: inline-block;
 }
 
-.arrow {
-    font-size: 1rem;
-    /* Smooth rotation with natural easing */
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    color: var(--primary-blue);
+.toc-button {
+    background: #FF9800;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.arrow.rotated {
+.toc-button:hover {
+    background: #F57C00;
+}
+
+.toc-button::after {
+    content: '▼';
+    font-size: 10px;
+    transition: transform 0.2s ease;
+}
+
+.toc-button.open::after {
     transform: rotate(180deg);
 }
 
-.section-content {
-    max-height: 0;
-    overflow: hidden;
-    /* Smooth content expansion */
-    transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* iOS-style momentum scrolling */
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
+.toc-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
 }
 
-.section-content.active {
-    max-height: 2000px;
-    /* Content slide-in animation */
-    animation: slideDown 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+.toc-dropdown.show {
+    display: block;
+    animation: fadeIn 0.2s ease;
 }
 
-/* Natural content flow animation */
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.toc-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-size: 14px;
+    transition: background 0.2s ease;
 }
 
-.content-wrapper {
-    padding: 2rem;
-    border-top: 1px solid var(--border-color);
-    background: var(--bg-gray);
+.toc-item:hover {
+    background: #f5f5f5;
 }
 
-/* Content Styles */
-.prayer-text {
-    font-style: italic;
-    font-size: 1.1rem;
-    line-height: 1.8;
-    text-align: center;
-    color: var(--primary-blue);
-    background: var(--white);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.achievements {
-    margin-top: 2rem;
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid var(--primary-blue);
-}
-
-.achievements h3 {
-    color: var(--primary-blue);
-    margin-bottom: 1rem;
-}
-
-.achievements ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.achievements li {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.achievements li:last-child {
+.toc-item:last-child {
     border-bottom: none;
 }
 
-.achievements li:before {
-    content: "✓";
-    color: var(--primary-blue);
+.toc-item.current {
+    background: #e3f2fd;
+    color: #1976d2;
     font-weight: bold;
-    margin-right: 0.5rem;
 }
 
-.vision-mission {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.vision, .mission {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.control-bar button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s ease;
 }
 
-.vision h3, .mission h3 {
-    color: var(--primary-blue);
-    margin-bottom: 1rem;
+.zoom-controls button {
+    background: #2196F3;
+    padding: 6px 12px;
+    font-size: 12px;
 }
 
-.key-positions {
-    margin-top: 1rem;
+.control-bar button:hover {
+    opacity: 0.8;
 }
 
-.position {
-    background: var(--white);
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 6px;
-    border-left: 3px solid var(--primary-blue);
+.control-bar button:disabled {
+    background: #666;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
-.departments-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.department-card {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.department-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-}
-
-.department-card h4 {
-    color: var(--primary-blue);
-    margin-bottom: 0.5rem;
-}
-
-.department-card small {
-    color: var(--text-light);
-    font-style: italic;
-}
-
-.faculty-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-}
-
-.faculty-card {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-top: 3px solid var(--primary-blue);
-}
-
-.faculty-card h4 {
-    color: var(--primary-blue);
-    margin-bottom: 0.5rem;
-}
-
-.faculty-card p {
-    margin-bottom: 0.3rem;
-    font-size: 0.9rem;
-}
-
-.outcomes {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.outcome-item {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background: var(--light-blue);
-    border-radius: 6px;
-    border-left: 4px solid var(--primary-blue);
-}
-
-.semester-overview {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 1rem 0;
-}
-
-.semester-overview h4 {
-    color: var(--primary-blue);
-    margin-bottom: 1rem;
-}
-
-/* Footer */
-.footer {
-    background: var(--primary-blue);
-    color: var(--white);
+#pageInfo {
+    font-weight: bold;
+    color: #fff;
+    min-width: 120px;
     text-align: center;
-    padding: 2rem 0;
-    margin-top: 3rem;
 }
 
-.footer p {
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
+/* Viewer container */
+#viewer-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden; /* Changed from auto to hidden for smooth transitions */
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Mobile Responsive */
+/* Image wrapper - Container for sliding images */
+#image-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100%;
+    min-height: 100%;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+    overflow: hidden; /* Hide images during slide transition */
+}
+
+/* Main image styles - Applied to both current and next images */
+.handbook-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Default desktop size - smaller than before */
+    max-width: 70%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    background: white;
+    cursor: grab;
+    
+    /* Smooth transition for sliding */
+    transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease;
+    opacity: 0;
+}
+
+/* Active image (currently visible) */
+.handbook-image.active {
+    opacity: 1;
+}
+
+/* Loading state for images */
+.handbook-image.loading {
+    opacity: 0.5;
+}
+
+.handbook-image:active {
+    cursor: grabbing;
+}
+
+/* Loading indicator */
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    background: rgba(0,0,0,0.8);
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 10;
+}
+
+.loading.show {
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+/* Error message */
+.error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    background: rgba(200, 50, 50, 0.9);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.error h3 {
+    margin: 0 0 10px 0;
+    color: white;
+}
+
+.error p {
+    margin: 0;
+    color: #ffcccc;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Zoom states */
+.zoomed #viewer-container {
+    overflow: auto;
+}
+
+.zoomed .handbook-image {
+    cursor: grab;
+}
+
+.zoomed .handbook-image:active {
+    cursor: grabbing;
+}
+
+/* Responsive design */
+@media (min-width: 1200px) {
+    /* Large desktop screens - even smaller for better readability */
+    .handbook-image {
+        max-width: 60%;
+        max-height: 75vh;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    /* Tablet landscape */
+    .handbook-image {
+        max-width: 85%;
+        max-height: 85vh;
+    }
+}
+
 @media (max-width: 768px) {
-    .logo-section h1 {
-        font-size: 2rem;
+    .control-bar {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 15px;
     }
-
-    .logo-section p {
-        font-size: 1rem;
+    
+    .nav-controls, .zoom-controls {
+        gap: 12px;
     }
-
-    .section-btn {
-        padding: 1rem 1.2rem;
-        font-size: 1rem;
-        font-weight: 500;
+    
+    .control-bar button {
+        padding: 6px 12px;
+        font-size: 12px;
     }
-
-    .btn-icon {
-        margin-right: 14px;
-        font-size: 1.2em;
+    
+    .zoom-controls button {
+        padding: 5px 10px;
+        font-size: 11px;
     }
-
-    .content-wrapper {
-        padding: 1.5rem;
+    
+    .toc-button {
+        padding: 6px 12px;
+        font-size: 12px;
     }
-
-    .vision-mission {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    
+    .toc-dropdown {
+        min-width: 180px;
     }
-
-    .departments-grid {
-        grid-template-columns: 1fr;
+    
+    #pageInfo {
+        font-size: 14px;
+        min-width: 100px;
     }
-
-    .faculty-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .home-floating {
-        bottom: 15px;
-        right: 15px;
-        width: 55px;
-        height: 55px;
-        font-size: 1.3rem;
-    }
-
-    /* Better mobile typography */
-    .expandable-section {
-        margin-bottom: 0.5rem;
-    }
-
-    .btn-text {
-        font-size: 1rem;
-        line-height: 1.4;
-    }
-
-    .arrow {
-        font-size: 0.9rem;
-        color: #6366f1;
+    
+    /* Tablet portrait: Larger than desktop for touch interface */
+    .handbook-image {
+        max-width: 90%;
+        max-height: 90vh;
     }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 0 15px;
+    .control-bar {
+        padding: 8px 10px;
+        flex-direction: column;
+        gap: 10px;
     }
-
-    .section-btn {
-        padding: 0.9rem 1rem;
-        font-size: 0.95rem;
+    
+    .nav-controls {
+        order: 2;
     }
-
-    .btn-icon {
-        margin-right: 12px;
-        font-size: 1.1em;
+    
+    .zoom-controls {
+        order: 1;
+        gap: 8px;
     }
-
-    .content-wrapper {
-        padding: 1rem;
+    
+    .toc-container {
+        order: 1;
+        margin-bottom: 5px;
     }
-
-    .department-card,
-    .faculty-card {
-        padding: 1rem;
+    
+    .control-bar button {
+        padding: 8px 12px;
+        font-size: 11px;
     }
-
-    .header {
-        padding: 1.5rem 0;
+    
+    .zoom-controls button {
+        padding: 6px 10px;
+        font-size: 10px;
     }
-
-    .logo-section h1 {
-        font-size: 1.8rem;
+    
+    .toc-button {
+        padding: 8px 12px;
+        font-size: 11px;
     }
-
-    .home-floating {
-        bottom: 10px;
-        right: 10px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
+    
+    .toc-dropdown {
+        min-width: 160px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    #pageInfo {
+        font-size: 12px;
+        order: 3;
+    }
+    
+    /* Mobile: Use full width for better readability */
+    .handbook-image {
+        max-width: 95%;
+        max-height: 95vh;
     }
 }
 
-/* Desktop Grid Layout (Optional - for future use) */
-@media (min-width: 1024px) {
-    .main-content {
-        padding: 3rem 0;
-    }
-    
-    .container {
-        max-width: 1400px;
-    }
-    
-    /* Enhanced desktop experience */
-    .expandable-section:hover {
-        transform: translateY(-2px);
-    }
+/* Disable text selection and image dragging */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
-/* Smooth animations */
-@media (prefers-reduced-motion: no-preference) {
-    .expandable-section,
-    .section-btn,
-    .home-floating,
-    .department-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+/* Custom scrollbar for zoomed view */
+#viewer-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
 }
 
-/* Focus states for accessibility */
-.section-btn:focus,
-.home-floating:focus {
-    outline: 2px solid var(--primary-blue);
-    outline-offset: 2px;
+#viewer-container::-webkit-scrollbar-track {
+    background: #333;
 }
 
-/* Print styles */
-@media print {
-    .home-floating,
-    .header {
-        display: none;
-    }
-    
-    .expandable-section {
-        break-inside: avoid;
-    }
-    
-    .section-content {
-        max-height: none !important;
-        overflow: visible !important;
-    }
+#viewer-container::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 6px;
+}
+
+#viewer-container::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Custom scrollbar for TOC dropdown */
+.toc-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.toc-dropdown::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.toc-dropdown::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.toc-dropdown::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Smooth transition styles for page changes */
+#image-wrapper {
+    /* Ensure smooth scaling during zoom */
+    will-change: transform;
+}
+
+.handbook-image {
+    /* Hardware acceleration for smooth sliding */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Transition states for different directions */
+.slide-in-right {
+    transform: translate(50%, -50%);
+}
+
+.slide-in-left {
+    transform: translate(-150%, -50%);
+}
+
+.slide-out-right {
+    transform: translate(50%, -50%);
+}
+
+.slide-out-left {
+    transform: translate(-150%, -50%);
 }
