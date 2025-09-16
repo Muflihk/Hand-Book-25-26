@@ -1,4 +1,4 @@
-// Simple Image Viewer with Smooth Sliding Transitions and Table of Contents
+// Simple Image Viewer with Smooth Sliding Transitions, Table of Contents, and Mobile Gestures
 let currentPage = 1;
 const totalPages = 20;
 let zoomLevel = 1;
@@ -6,6 +6,18 @@ let isDragging = false;
 let startPosition = { x: 0, y: 0 };
 let imageOffset = { x: 0, y: 0 };
 let isTransitioning = false;
+
+// Mobile gesture variables
+let touchStartTime = 0;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let initialPinchDistance = 0;
+let initialZoomLevel = 1;
+let isPinching = false;
+let swipeThreshold = 50; // minimum distance for swipe
+let swipeTimeThreshold = 300; // maximum time for swipe in ms
 
 // Table of Contents - You can edit these titles later
 const tableOfContents = [
@@ -336,20 +348,133 @@ function resetView() {
     applyZoom();
 }
 
+// Calculate distance between two touch points (for pinch gesture)
+function getDistance(touch1, touch2) {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+// Get center point between two touches
+function getTouchCenter(touch1, touch2) {
+    return {
+        x: (touch1.clientX + touch2.clientX) / 2,
+        y: (touch1.clientY + touch2.clientY) / 2
+    };
+}
+
+// Handle touch start for gestures
+function handleTouchStart(e) {
+    const touches = e.touches;
+    touchStartTime = Date.now();
+    
+    if (touches.length === 1) {
+        // Single touch - potential swipe or drag
+        touchStartX = touches[0].clientX;
+        touchStartY = touches[0].clientY;
+        
+        // Start dragging if zoomed
+        if (zoomLevel > 1 && !isTransitioning) {
+            isDragging = true;
+            startPosition.x = touches[0].clientX - imageOffset.x;
+            startPosition.y = touches[0].clientY - imageOffset.y;
+        }
+    } else if (touches.length === 2) {
+        // Two touches - pinch gesture
+        isPinching = true;
+        isDragging = false;
+        initialPinchDistance = getDistance(touches[0], touches[1]);
+        initialZoomLevel = zoomLevel;
+        
+        // Store initial touch center for zoom origin
+        const center = getTouchCenter(touches[0], touches[1]);
+        startPosition.x = center.x;
+        startPosition.y = center.y;
+    }
+    
+    e.preventDefault();
+}
+
+// Handle touch move for gestures
+function handleTouchMove(e) {
+    const touches = e.touches;
+    
+    if (touches.length === 1 && isDragging && zoomLevel > 1 && !isTransitioning) {
+        // Single touch drag when zoomed
+        imageOffset.x = touches[0].clientX - startPosition.x;
+        imageOffset.y = touches[0].clientY - startPosition.y;
+        
+        // Limit drag to reasonable bounds
+        const maxOffset = 1000;
+        imageOffset.x = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.x));
+        imageOffset.y = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.y));
+        
+        applyZoom();
+    } else if (touches.length === 2 && isPinching && !isTransitioning) {
+        // Two touch pinch gesture
+        const currentDistance = getDistance(touches[0], touches[1]);
+        const scale = currentDistance / initialPinchDistance;
+        
+        // Calculate new zoom level
+        const newZoomLevel = Math.max(0.5, Math.min(10, initialZoomLevel * scale));
+        zoomLevel = newZoomLevel;
+        
+        applyZoom();
+    }
+    
+    e.preventDefault();
+}
+
+// Handle touch end for gestures
+function handleTouchEnd(e) {
+    const touchEndTime = Date.now();
+    const touchDuration = touchEndTime - touchStartTime;
+    
+    if (e.changedTouches.length === 1 && !isPinching && touchDuration < swipeTimeThreshold) {
+        touchEndX = e.changedTouches[0].clientX;
+        touchEndY = e.changedTouches[0].clientY;
+        
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        const absDeltaX = Math.abs(deltaX);
+        const absDeltaY = Math.abs(deltaY);
+        
+        // Check if this is a horizontal swipe (and not just a tap or vertical scroll)
+        if (absDeltaX > swipeThreshold && absDeltaX > absDeltaY && zoomLevel <= 1) {
+            if (deltaX > 0) {
+                // Swipe right - go to previous page
+                previousPage();
+            } else {
+                // Swipe left - go to next page
+                nextPage();
+            }
+        }
+    }
+    
+    // Reset gesture states
+    isDragging = false;
+    isPinching = false;
+    
+    // If zoom is very small, reset to fit screen
+    if (zoomLevel < 0.8) {
+        fitToScreen();
+    }
+}
+
 // Add event listeners
 function addEventListeners() {
     const imageWrapper = document.getElementById('image-wrapper');
     const container = document.getElementById('viewer-container');
     
-    // Mouse events for dragging
+    // Mouse events for dragging (desktop)
     imageWrapper.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', endDrag);
     
-    // Touch events for mobile
-    imageWrapper.addEventListener('touchstart', startDragTouch);
-    document.addEventListener('touchmove', dragTouch);
-    document.addEventListener('touchend', endDrag);
+    // Enhanced touch events for mobile gestures
+    imageWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
     
     // Mouse wheel for zoom
     container.addEventListener('wheel', handleWheel);
@@ -357,7 +482,7 @@ function addEventListeners() {
     // Keyboard navigation
     document.addEventListener('keydown', handleKeyboard);
     
-    // Double-click to zoom
+    // Double-click/tap to zoom
     imageWrapper.addEventListener('dblclick', function(e) {
         e.preventDefault();
         if (zoomLevel === 1) {
@@ -371,24 +496,27 @@ function addEventListeners() {
     imageWrapper.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
+    
+    // Prevent default touch behaviors to avoid scrolling issues
+    document.addEventListener('touchstart', function(e) {
+        if (e.target.closest('#image-wrapper')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchmove', function(e) {
+        if (e.target.closest('#image-wrapper')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 }
 
-// Drag functions
+// Original drag functions for mouse (desktop)
 function startDrag(e) {
     if (zoomLevel > 1 && !isTransitioning) {
         isDragging = true;
         startPosition.x = e.clientX - imageOffset.x;
         startPosition.y = e.clientY - imageOffset.y;
-        e.preventDefault();
-    }
-}
-
-function startDragTouch(e) {
-    if (zoomLevel > 1 && e.touches.length === 1 && !isTransitioning) {
-        isDragging = true;
-        const touch = e.touches[0];
-        startPosition.x = touch.clientX - imageOffset.x;
-        startPosition.y = touch.clientY - imageOffset.y;
         e.preventDefault();
     }
 }
@@ -399,22 +527,6 @@ function drag(e) {
         imageOffset.y = e.clientY - startPosition.y;
         
         // Limit drag to reasonable bounds
-        const maxOffset = 1000; // Large bounds for high zoom
-        imageOffset.x = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.x));
-        imageOffset.y = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.y));
-        
-        applyZoom();
-        e.preventDefault();
-    }
-}
-
-function dragTouch(e) {
-    if (isDragging && zoomLevel > 1 && e.touches.length === 1 && !isTransitioning) {
-        const touch = e.touches[0];
-        imageOffset.x = touch.clientX - startPosition.x;
-        imageOffset.y = touch.clientY - startPosition.y;
-        
-        // Limit drag
         const maxOffset = 1000;
         imageOffset.x = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.x));
         imageOffset.y = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.y));
