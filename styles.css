@@ -1,9 +1,8 @@
-
-/* Simple Image Viewer CSS with Smooth Transitions */
+/* Simple Image Viewer CSS with Blue Theme */
 html, body {
     margin: 0;
     padding: 0;
-    background: #222;
+    background: #1a237e; /* Dark blue background */
     font-family: Arial, sans-serif;
     height: 100vh;
     width: 100vw;
@@ -13,13 +12,42 @@ html, body {
     user-select: none;
 }
 
+/* Header Section */
+.header {
+    background: #0d1a5c; /* Darker blue for header */
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    border-bottom: 2px solid #3f51b5; /* Blue border */
+}
+
+.header h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.header h2 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
 /* Control bar */
 .control-bar {
-    background: #333;
+    background: #283593; /* Medium blue for control bar */
     color: white;
     padding: 12px 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 20px;
     flex-shrink: 0;
@@ -31,12 +59,12 @@ html, body {
     display: flex;
     align-items: center;
     gap: 20px;
+    margin-left: auto;
 }
 
-.zoom-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* Button row container for mobile layout */
+.button-row {
+    display: contents; /* Invisible on desktop */
 }
 
 /* Table of Contents Dropdown */
@@ -46,21 +74,24 @@ html, body {
 }
 
 .toc-button {
-    background: #FF9800;
+    background: #1976d2; /* Blue for TOC button */
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    font-weight: 500;
     transition: background 0.2s ease;
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 140px;
+    justify-content: center;
 }
 
 .toc-button:hover {
-    background: #F57C00;
+    background: #1565c0; /* Darker blue on hover */
 }
 
 .toc-button::after {
@@ -78,11 +109,12 @@ html, body {
     top: 100%;
     left: 0;
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid #2196f3; /* Blue border for dropdown */
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: 200px;
-    max-height: 300px;
+    min-width: 400px;
+    max-width: 400px;
+    max-height: 400px;
     overflow-y: auto;
     z-index: 1000;
     display: none;
@@ -94,16 +126,20 @@ html, body {
 }
 
 .toc-item {
-    padding: 10px 15px;
+    padding: 12px 18px;
     cursor: pointer;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e3f2fd; /* Light blue border */
     color: #333;
     font-size: 14px;
+    line-height: 1.4;
     transition: background 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .toc-item:hover {
-    background: #f5f5f5;
+    background: #e3f2fd; /* Light blue on hover */
 }
 
 .toc-item:last-child {
@@ -111,8 +147,26 @@ html, body {
 }
 
 .toc-item.current {
-    background: #e3f2fd;
-    color: #1976d2;
+    background: #bbdefb; /* Light blue for current item */
+    color: #0d47a1; /* Dark blue text */
+    font-weight: bold;
+}
+
+/* Major section headings - make them bold */
+.toc-item.major-section {
+    font-weight: bold;
+    font-size: 15px;
+    color: #0d47a1; /* Dark blue text */
+    background-color: #f3f8ff; /* Very light blue background */
+}
+
+.toc-item.major-section:hover {
+    background-color: #e8f2ff; /* Slightly darker light blue on hover */
+}
+
+.toc-item.major-section.current {
+    background: #c5e1fd; /* Medium light blue for current major section */
+    color: #0d47a1; /* Dark blue text */
     font-weight: bold;
 }
 
@@ -122,7 +176,7 @@ html, body {
 }
 
 .control-bar button {
-    background: #4CAF50;
+    background: #3f51b5; /* Blue for other buttons */
     color: white;
     border: none;
     padding: 8px 16px;
@@ -132,35 +186,22 @@ html, body {
     transition: background 0.2s ease;
 }
 
-.zoom-controls button {
-    background: #2196F3;
-    padding: 6px 12px;
-    font-size: 12px;
-}
-
 .control-bar button:hover {
-    opacity: 0.8;
+    background: #3949ab; /* Darker blue on hover */
 }
 
 .control-bar button:disabled {
-    background: #666;
+    background: #5c6bc0; /* Lighter blue for disabled */
     cursor: not-allowed;
     opacity: 0.5;
-}
-
-#pageInfo {
-    font-weight: bold;
-    color: #fff;
-    min-width: 120px;
-    text-align: center;
 }
 
 /* Viewer container */
 #viewer-container {
     flex: 1;
     position: relative;
-    overflow: hidden; /* Changed from auto to hidden for smooth transitions */
-    background: #222;
+    overflow: hidden;
+    background: #1a237e; /* Dark blue background for viewer */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -176,7 +217,7 @@ html, body {
     min-height: 100%;
     transition: transform 0.3s ease;
     transform-origin: center center;
-    overflow: hidden; /* Hide images during slide transition */
+    overflow: hidden;
 }
 
 /* Main image styles - Applied to both current and next images */
@@ -186,7 +227,7 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     
-    /* Default desktop size - smaller than before */
+    /* Default desktop size */
     max-width: 70%;
     max-height: 80vh;
     width: auto;
@@ -225,7 +266,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     font-size: 18px;
-    background: rgba(0,0,0,0.8);
+    background: rgba(13, 26, 92, 0.9); /* Dark blue background */
     padding: 20px;
     border-radius: 8px;
     display: none;
@@ -245,7 +286,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
-    background: rgba(200, 50, 50, 0.9);
+    background: rgba(198, 40, 40, 0.9); /* Keep red for errors */
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -282,9 +323,29 @@ html, body {
     cursor: grabbing;
 }
 
+/* Bottom page info bar */
+.bottom-bar {
+    background: #283593; /* Medium blue for bottom bar */
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+#pageInfo {
+    font-weight: bold;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
 /* Responsive design */
 @media (min-width: 1200px) {
-    /* Large desktop screens - even smaller for better readability */
+    /* Large desktop screens */
     .handbook-image {
         max-width: 60%;
         max-height: 75vh;
@@ -297,6 +358,10 @@ html, body {
         max-width: 85%;
         max-height: 85vh;
     }
+    
+    .toc-dropdown {
+        min-width: 320px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -306,7 +371,7 @@ html, body {
         gap: 15px;
     }
     
-    .nav-controls, .zoom-controls {
+    .nav-controls {
         gap: 12px;
     }
     
@@ -315,23 +380,15 @@ html, body {
         font-size: 12px;
     }
     
-    .zoom-controls button {
-        padding: 5px 10px;
-        font-size: 11px;
-    }
-    
     .toc-button {
-        padding: 6px 12px;
+        padding: 8px 16px;
         font-size: 12px;
+        min-width: 120px;
     }
     
     .toc-dropdown {
-        min-width: 180px;
-    }
-    
-    #pageInfo {
-        font-size: 14px;
-        min-width: 100px;
+        min-width: 280px;
+        max-width: 90vw;
     }
     
     /* Tablet portrait: Larger than desktop for touch interface */
@@ -342,56 +399,113 @@ html, body {
 }
 
 @media (max-width: 480px) {
+    .header {
+        padding: 10px 15px;
+    }
+    
+    .header h1 {
+        font-size: 16px;
+    }
+    
+    .header h2 {
+        font-size: 14px;
+    }
+    
+    .header h3 {
+        font-size: 12px;
+    }
+    
     .control-bar {
         padding: 8px 10px;
         flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    /* Button row: Contents and Fit Screen side by side */
+    .button-row {
+        display: flex;
+        width: 100%;
         gap: 10px;
-    }
-    
-    .nav-controls {
-        order: 2;
-    }
-    
-    .zoom-controls {
         order: 1;
-        gap: 8px;
     }
     
     .toc-container {
-        order: 1;
-        margin-bottom: 5px;
+        flex: 1;
+        position: relative;
     }
     
-    .control-bar button {
-        padding: 8px 12px;
-        font-size: 11px;
-    }
-    
-    .zoom-controls button {
-        padding: 6px 10px;
-        font-size: 10px;
+    /* Ensure both buttons have the same height */
+    .button-row button,
+    .toc-button {
+        height: 44px; /* Fixed height for consistency */
+        padding: 10px 16px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
     }
     
     .toc-button {
-        padding: 8px 12px;
-        font-size: 11px;
+        width: 100%;
+        min-width: auto;
+    }
+    
+    /* Fit Screen button */
+    .control-bar > .button-row > button:not(.toc-button) {
+        flex: 1;
+        height: 44px; /* Same height as TOC button */
+    }
+    
+    /* Hide navigation controls on mobile */
+    .nav-controls {
+        display: none !important;
+    }
+    
+    /* Hide Previous and Next buttons specifically */
+    #prevBtn,
+    #nextBtn {
+        display: none !important;
     }
     
     .toc-dropdown {
-        min-width: 160px;
-        left: 50%;
-        transform: translateX(-50%);
+        min-width: 420px;
+        max-width: 98vw;
+        left: 0;
+        transform: none;
+        max-height: 400px;
+        right: auto;
+    }
+    
+    .toc-item {
+        padding: 12px 16px;
+        font-size: 13px;
+        white-space: normal;
+    }
+    
+    .bottom-bar {
+        padding: 10px 15px;
     }
     
     #pageInfo {
-        font-size: 12px;
-        order: 3;
+        font-size: 14px;
     }
     
     /* Mobile: Use full width for better readability */
     .handbook-image {
         max-width: 95%;
         max-height: 95vh;
+    }
+}
+
+/* Additional fix for very small screens */
+@media (max-width: 400px) {
+    .toc-dropdown {
+        min-width: 380px;
+        max-width: 95vw;
+        left: 0;
+        right: 10px;
     }
 }
 
@@ -415,44 +529,42 @@ html, body {
 }
 
 #viewer-container::-webkit-scrollbar-track {
-    background: #333;
+    background: #283593; /* Blue scrollbar track */
 }
 
 #viewer-container::-webkit-scrollbar-thumb {
-    background: #666;
+    background: #3f51b5; /* Blue scrollbar thumb */
     border-radius: 6px;
 }
 
 #viewer-container::-webkit-scrollbar-thumb:hover {
-    background: #777;
+    background: #3949ab; /* Darker blue on hover */
 }
 
 /* Custom scrollbar for TOC dropdown */
 .toc-dropdown::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .toc-dropdown::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #e3f2fd; /* Light blue scrollbar track */
 }
 
 .toc-dropdown::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 3px;
+    background: #90caf9; /* Light blue scrollbar thumb */
+    border-radius: 4px;
 }
 
 .toc-dropdown::-webkit-scrollbar-thumb:hover {
-    background: #999;
+    background: #64b5f6; /* Darker light blue on hover */
 }
 
 /* Smooth transition styles for page changes */
 #image-wrapper {
-    /* Ensure smooth scaling during zoom */
     will-change: transform;
 }
 
 .handbook-image {
-    /* Hardware acceleration for smooth sliding */
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
