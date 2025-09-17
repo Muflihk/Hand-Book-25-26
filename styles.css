@@ -470,7 +470,7 @@ html, body {
     }
     
     .toc-dropdown {
-        min-width: 420px;
+        min-width: 380px;
         max-width: 98vw;
         left: 0;
         transform: none;
@@ -586,4 +586,5 @@ html, body {
 .slide-out-left {
     transform: translate(-150%, -50%);
 }
+
 
