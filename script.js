@@ -1,6 +1,6 @@
 // Simple Image Viewer with Smooth Sliding Transitions, Table of Contents, and Mobile Gestures
 let currentPage = 1;
-const totalPages = 20;
+const totalPages = 182; // 10 front pages + 172 main pages
 let zoomLevel = 1;
 let isDragging = false;
 let startPosition = { x: 0, y: 0 };
@@ -16,38 +16,120 @@ let touchEndY = 0;
 let initialPinchDistance = 0;
 let initialZoomLevel = 1;
 let isPinching = false;
-let swipeThreshold = 50; // minimum distance for swipe
-let swipeTimeThreshold = 300; // maximum time for swipe in ms
+let swipeThreshold = 50;
+let swipeTimeThreshold = 300;
 
-// Table of Contents - You can edit these titles later
+// Complete Table of Contents based on your handbook (pages 1-172)
 const tableOfContents = [
-    "Page 1",
-    "Page 2", 
-    "Page 3",
-    "Page 4",
-    "Page 5",
-    "Page 6",
-    "Page 7",
-    "Page 8",
-    "Page 9",
-    "Page 10",
-    "Page 11",
-    "Page 12",
-    "Page 13",
-    "Page 14",
-    "Page 15",
-    "Page 16",
-    "Page 17",
-    "Page 18",
-    "Page 19",
-    "Page 20"
+    // Front pages (Roman numerals)
+    { title: "Cover", page: "i", isMajor: false },
+    { title: "--", page: "ii", isMajor: false },
+    { title: "College Prayer", page: "iii", isMajor: false },
+    { title: "Student Profile", page: "iv", isMajor: false },
+    { title: "Pledge", page: "v", isMajor: false },
+    { title: "Tribute", page: "vi", isMajor: false },
+    { title: "Contents", page: "vii", isMajor: false },
+    { title: "Contents", page: "viii", isMajor: false },
+    { title: "Contents", page: "ix", isMajor: false },
+    { title: "--", page: "x", isMajor: false },
+    
+    // Main content (Arabic numerals) - Major sections marked
+    { title: "1. College Profile", page: "1", isMajor: true },
+    { title: "1.1 About WMO", page: "1", isMajor: false },
+    { title: "1.2 About the college", page: "2", isMajor: false },
+    { title: "1.3 Managing Committee", page: "4", isMajor: false },
+    { title: "1.4 Growth and Expansion", page: "5", isMajor: false },
+    { title: "1.5 Major Achievements", page: "6", isMajor: false },
+    
+    { title: "2. Academic Programs", page: "6", isMajor: true },
+    { title: "2.1 Department of Arabic", page: "7", isMajor: false },
+    { title: "2.2 Department of Chemistry", page: "15", isMajor: false },
+    { title: "2.3 Department of Commerce", page: "20", isMajor: false },
+    { title: "2.4 Department of Commerce CA", page: "28", isMajor: false },
+    { title: "2.5 Department of Computer Science", page: "33", isMajor: false },
+    { title: "2.6 Department of Economics", page: "39", isMajor: false },
+    { title: "2.7 Department of Electronics", page: "44", isMajor: false },
+    { title: "2.8 Department of English", page: "52", isMajor: false },
+    { title: "2.9 Department of Mass Communication", page: "61", isMajor: false },
+    { title: "2.10 Department of Mathematics", page: "66", isMajor: false },
+    { title: "2.11 Department of Physics", page: "73", isMajor: false },
+    { title: "2.12 Department of Social Work", page: "81", isMajor: false },
+    { title: "2.13 Department of Hindi", page: "86", isMajor: false },
+    { title: "2.14 Department of Malayalam", page: "90", isMajor: false },
+    { title: "2.15 Department of Physical Education", page: "92", isMajor: false },
+    
+    { title: "3. Academic Support", page: "94", isMajor: true },
+    { title: "3.1 Library", page: "95", isMajor: false },
+    { title: "3.2 Administrative Staff", page: "96", isMajor: false },
+    { title: "3.3 Examination Cell", page: "98", isMajor: false },
+    { title: "3.4 Digital Infrastructure", page: "99", isMajor: false },
+    
+    { title: "4. Institutional Innovation and Development", page: "101", isMajor: true },
+    { title: "4.1 Institution Innovation Council", page: "101", isMajor: false },
+    { title: "4.2 IEDC", page: "101", isMajor: false },
+    { title: "4.3 YIP", page: "101", isMajor: false },
+    { title: "4.4 IETE Student Forum", page: "102", isMajor: false },
+    
+    { title: "5. Governing Bodies and Committees", page: "103", isMajor: true },
+    { title: "5.1 College Council", page: "103", isMajor: false },
+    { title: "5.2 Internal Quality Assurance Cell (IQAC)", page: "103", isMajor: false },
+    { title: "5.3 Discipline Committee", page: "104", isMajor: false },
+    { title: "5.4 Parent-Teacher Association (PTA)", page: "105", isMajor: false },
+    { title: "5.5 Exam Monitoring Cell", page: "105", isMajor: false },
+    { title: "5.6 Outcome Assessment Council", page: "106", isMajor: false },
+    
+    { title: "6. Student Life", page: "107", isMajor: true },
+    { title: "6.1 College Union", page: "107", isMajor: false },
+    { title: "6.2 Service and Outreach Units", page: "107", isMajor: false },
+    { title: "6.3 Coaching & Support Programmes", page: "109", isMajor: false },
+    { title: "6.4 Student Associations", page: "111", isMajor: false },
+    { title: "6.5 Cells", page: "112", isMajor: false },
+    { title: "6.6 Clubs", page: "115", isMajor: false },
+    { title: "6.7 Forums", page: "117", isMajor: false },
+    
+    { title: "7. Publications and Media", page: "120", isMajor: true },
+    { title: "7.1 Publications Division", page: "120", isMajor: false },
+    { title: "7.2 PR and Media Cell", page: "120", isMajor: false },
+    
+    { title: "8. Essential Services", page: "121", isMajor: true },
+    { title: "8.1 Academic Infrastructure", page: "121", isMajor: false },
+    { title: "8.2 Sports and Recreation", page: "122", isMajor: false },
+    { title: "8.3 Residential and Daily Life Services", page: "123", isMajor: false },
+    { title: "8.4 Support and Accessibility Services", page: "124", isMajor: false },
+    
+    { title: "9. Rules, Regulations and Code of Conduct", page: "126", isMajor: true },
+    { title: "9.1 General Discipline", page: "126", isMajor: false },
+    { title: "9.2 Attendance Rules", page: "129", isMajor: false },
+    { title: "9.3 Identity Card", page: "129", isMajor: false },
+    { title: "9.4 Library Rules", page: "130", isMajor: false },
+    { title: "9.5 Grievance Redressal Mechanism", page: "131", isMajor: false },
+    
+    { title: "10. Others", page: "132", isMajor: true },
+    { title: "10.1 Fee Structure", page: "132", isMajor: false },
+    { title: "10.2 Responsibility Assignment", page: "135", isMajor: false },
+    { title: "10.3 Academic Schedule", page: "146", isMajor: false },
+    { title: "10.4 Important Contact Numbers", page: "160", isMajor: false },
+    { title: "10.5 Time Table", page: "163", isMajor: false }
 ];
 
-// Page URLs
-const pageUrls = [];
-for (let i = 1; i <= totalPages; i++) {
-    pageUrls.push(`images/page${i}.jpg`);
+// Generate page file mapping for all 182 pages
+function generatePageFileMapping() {
+    const mapping = [];
+    
+    // Front pages (1-10): front1.jpg to front10.jpg
+    for (let i = 1; i <= 10; i++) {
+        mapping.push(`images/front${i}.jpg`);
+    }
+    
+    // Main pages (11-182): page1.jpg to page172.jpg
+    for (let i = 1; i <= 172; i++) {
+        mapping.push(`images/page${i}.jpg`);
+    }
+    
+    return mapping;
 }
+
+const pageFileMapping = generatePageFileMapping();
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -58,22 +140,105 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePageInfo();
     updateNavigationButtons();
     addEventListeners();
+    setupDropdownCloseHandlers(); // Add this new function call
 });
 
-// Setup Table of Contents
+// Setup enhanced dropdown closing handlers
+function setupDropdownCloseHandlers() {
+    // Close TOC when clicking outside - improved version
+    document.addEventListener('click', function(event) {
+        const tocContainer = document.querySelector('.toc-container');
+        const dropdown = document.getElementById('tocDropdown');
+        const button = document.getElementById('tocButton');
+        
+        // Check if dropdown is open and click is outside the TOC container
+        if (dropdown && dropdown.classList.contains('show') && !tocContainer.contains(event.target)) {
+            dropdown.classList.remove('show');
+            button.classList.remove('open');
+        }
+    });
+
+    // Also close TOC when clicking on the main viewer area
+    const viewerContainer = document.getElementById('viewer-container');
+    if (viewerContainer) {
+        viewerContainer.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('tocDropdown');
+            const button = document.getElementById('tocButton');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                button.classList.remove('open');
+            }
+        });
+    }
+
+    // Close TOC when clicking on header area
+    const header = document.querySelector('.header');
+    if (header) {
+        header.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('tocDropdown');
+            const button = document.getElementById('tocButton');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+                button.classList.remove('open');
+            }
+        });
+    }
+}
+
+// Setup Table of Contents with major section styling
 function setupTableOfContents() {
     const tocDropdown = document.getElementById('tocDropdown');
     tocDropdown.innerHTML = '';
     
-    tableOfContents.forEach((title, index) => {
+    tableOfContents.forEach((item, index) => {
         const tocItem = document.createElement('div');
         tocItem.className = 'toc-item';
-        tocItem.textContent = title;
-        tocItem.onclick = () => goToPage(index + 1);
+        
+        // Add major-section class for bold styling
+        if (item.isMajor) {
+            tocItem.classList.add('major-section');
+        }
+        
+        tocItem.textContent = item.title;
+        tocItem.onclick = () => goToPageByNumber(item.page);
         tocDropdown.appendChild(tocItem);
     });
     
     updateTOCHighlight();
+}
+
+// Go to page by page number (handles both roman and arabic numerals)
+function goToPageByNumber(pageNumber) {
+    let targetIndex;
+    
+    if (typeof pageNumber === 'string' && pageNumber.match(/^[ivxlc]+$/i)) {
+        // Roman numeral - convert to index
+        const romanToIndex = {
+            'i': 1, 'ii': 2, 'iii': 3, 'iv': 4, 'v': 5,
+            'vi': 6, 'vii': 7, 'viii': 8, 'ix': 9, 'x': 10
+        };
+        targetIndex = romanToIndex[pageNumber.toLowerCase()];
+    } else {
+        // Arabic numeral - add 10 for front pages offset
+        targetIndex = parseInt(pageNumber) + 10;
+    }
+    
+    if (targetIndex && targetIndex >= 1 && targetIndex <= totalPages && targetIndex !== currentPage && !isTransitioning) {
+        const direction = targetIndex > currentPage ? 'next' : 'prev';
+        currentPage = targetIndex;
+        updatePageInfo();
+        updateNavigationButtons();
+        updateTOCHighlight();
+        loadCurrentPage(direction);
+        
+        // Close TOC dropdown
+        const dropdown = document.getElementById('tocDropdown');
+        const button = document.getElementById('tocButton');
+        dropdown.classList.remove('show');
+        button.classList.remove('open');
+        
+        console.log('Jumped to page:', currentPage);
+    }
 }
 
 // Toggle Table of Contents dropdown
@@ -91,22 +256,14 @@ function toggleTOC() {
     }
 }
 
-// Close TOC when clicking outside
-document.addEventListener('click', function(event) {
-    const tocContainer = document.querySelector('.toc-container');
-    if (!tocContainer.contains(event.target)) {
-        const dropdown = document.getElementById('tocDropdown');
-        const button = document.getElementById('tocButton');
-        dropdown.classList.remove('show');
-        button.classList.remove('open');
-    }
-});
-
-// Update TOC highlight
+// Update TOC highlight with proper major section styling
 function updateTOCHighlight() {
     const tocItems = document.querySelectorAll('.toc-item');
+    const currentPageNumber = getCurrentPageNumber();
+    
     tocItems.forEach((item, index) => {
-        if (index + 1 === currentPage) {
+        const tocItem = tableOfContents[index];
+        if (tocItem && tocItem.page === currentPageNumber) {
             item.classList.add('current');
         } else {
             item.classList.remove('current');
@@ -114,7 +271,17 @@ function updateTOCHighlight() {
     });
 }
 
-// Go to specific page
+// Get current page number (roman for front pages, arabic for main)
+function getCurrentPageNumber() {
+    if (currentPage <= 10) {
+        const romanNumerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
+        return romanNumerals[currentPage - 1];
+    } else {
+        return (currentPage - 10).toString();
+    }
+}
+
+// Go to specific page (by index)
 function goToPage(pageNumber) {
     if (pageNumber < 1 || pageNumber > totalPages || pageNumber === currentPage || isTransitioning) {
         return;
@@ -127,12 +294,6 @@ function goToPage(pageNumber) {
     updateTOCHighlight();
     loadCurrentPage(direction);
     
-    // Close TOC dropdown
-    const dropdown = document.getElementById('tocDropdown');
-    const button = document.getElementById('tocButton');
-    dropdown.classList.remove('show');
-    button.classList.remove('open');
-    
     console.log('Jumped to page:', currentPage);
 }
 
@@ -140,7 +301,6 @@ function goToPage(pageNumber) {
 function setupImageContainer() {
     const imageWrapper = document.getElementById('image-wrapper');
     
-    // Create two image elements for smooth transitions
     imageWrapper.innerHTML = `
         <img id="handbook-image-current" class="handbook-image active" src="" alt="">
         <img id="handbook-image-next" class="handbook-image" src="" alt="">
@@ -161,7 +321,8 @@ function loadCurrentPage(direction = 'none') {
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
     
-    // If this is the initial load, just load normally
+    const imageUrl = pageFileMapping[currentPage - 1];
+    
     if (direction === 'none') {
         loading.classList.add('show');
         error.style.display = 'none';
@@ -169,7 +330,7 @@ function loadCurrentPage(direction = 'none') {
         const newImage = new Image();
         newImage.onload = function() {
             currentImg.src = newImage.src;
-            currentImg.alt = `Handbook Page ${currentPage}`;
+            currentImg.alt = `Handbook Page ${getCurrentPageNumber()}`;
             loading.classList.remove('show');
             resetView();
             console.log(`Page ${currentPage} loaded initially`);
@@ -178,99 +339,74 @@ function loadCurrentPage(direction = 'none') {
         newImage.onerror = function() {
             loading.classList.remove('show');
             error.style.display = 'block';
-            console.error(`Failed to load page ${currentPage}`);
+            console.error(`Failed to load page ${currentPage}: ${imageUrl}`);
         };
         
-        newImage.src = pageUrls[currentPage - 1];
+        newImage.src = imageUrl;
         return;
     }
     
-    // Smooth transition for next/previous
     isTransitioning = true;
-    
-    // Show loading briefly
     loading.classList.add('show');
     error.style.display = 'none';
     
-    // Preload the new image
     const newImage = new Image();
     
     newImage.onload = function() {
-        // Hide loading
         loading.classList.remove('show');
         
-        // Set up the next image
         nextImg.src = newImage.src;
-        nextImg.alt = `Handbook Page ${currentPage}`;
+        nextImg.alt = `Handbook Page ${getCurrentPageNumber()}`;
         
-        // Reset any existing transforms and position the next image off-screen
-        nextImg.style.transition = 'none'; // Disable transition for positioning
+        nextImg.style.transition = 'none';
         if (direction === 'next') {
-            // Start from right side
             nextImg.style.transform = 'translate(50%, -50%)';
         } else {
-            // Start from left side  
             nextImg.style.transform = 'translate(-150%, -50%)';
         }
         
         nextImg.classList.add('active');
-        
-        // Force a reflow before starting animation
         nextImg.offsetHeight;
-        
-        // Re-enable transitions
         nextImg.style.transition = 'transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease';
         
-        // Start the slide animation after a small delay
         setTimeout(() => {
-            // Slide current image out
             if (direction === 'next') {
                 currentImg.style.transform = 'translate(-150%, -50%)';
             } else {
                 currentImg.style.transform = 'translate(50%, -50%)';
             }
-            
-            // Slide next image to center
             nextImg.style.transform = 'translate(-50%, -50%)';
             
-            // After animation completes, clean up
             setTimeout(() => {
-                // Swap the image references and reset positions
                 currentImg.src = nextImg.src;
                 currentImg.alt = nextImg.alt;
                 currentImg.style.transition = 'none';
                 currentImg.style.transform = 'translate(-50%, -50%)';
                 
-                // Clean up next image
                 nextImg.src = '';
                 nextImg.style.transition = 'none';
                 nextImg.style.transform = 'translate(50%, -50%)';
                 nextImg.classList.remove('active');
                 
-                // Re-enable transitions for current image
                 setTimeout(() => {
                     currentImg.style.transition = 'transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease';
                 }, 50);
                 
-                // Reset zoom and position for new page
                 resetView();
                 isTransitioning = false;
-                
                 console.log(`Page ${currentPage} loaded with ${direction} transition`);
-            }, 350); // Match CSS transition duration
-            
-        }, 50); // Small delay to ensure DOM update
+            }, 350);
+        }, 50);
     };
     
     newImage.onerror = function() {
         loading.classList.remove('show');
         error.style.display = 'block';
         isTransitioning = false;
-        console.error(`Failed to load page ${currentPage}`);
+        console.error(`Failed to load page ${currentPage}: ${imageUrl}`);
     };
     
-    // Start loading
-    newImage.src = pageUrls[currentPage - 1];
+    newImage.src = imageUrl;
 }
 
 // Navigation functions
@@ -299,7 +435,7 @@ function previousPage() {
 // Zoom functions
 function zoomIn() {
     if (!isTransitioning) {
-        zoomLevel = Math.min(zoomLevel * 1.5, 10); // Max 10x zoom
+        zoomLevel = Math.min(zoomLevel * 1.5, 10);
         applyZoom();
         console.log('Zoom in to:', zoomLevel);
     }
@@ -307,7 +443,7 @@ function zoomIn() {
 
 function zoomOut() {
     if (!isTransitioning) {
-        zoomLevel = Math.max(zoomLevel / 1.5, 0.1); // Min 0.1x zoom
+        zoomLevel = Math.max(zoomLevel / 1.5, 0.1);
         applyZoom();
         console.log('Zoom out to:', zoomLevel);
     }
@@ -325,37 +461,31 @@ function fitToScreen() {
 // Apply zoom and positioning
 function applyZoom() {
     const imageWrapper = document.getElementById('image-wrapper');
-    
-    // Apply transform to the wrapper, not individual images
     const transform = `scale(${zoomLevel}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
     imageWrapper.style.transform = transform;
     
-    // Update body class for zoom state
     if (zoomLevel > 1) {
         document.body.classList.add('zoomed');
     } else {
         document.body.classList.remove('zoomed');
-        imageOffset = { x: 0, y: 0 }; // Reset offset when not zoomed
+        imageOffset = { x: 0, y: 0 };
     }
-    
-    console.log('Applied zoom:', zoomLevel, 'offset:', imageOffset);
 }
 
-// Reset view (called when loading new page)
+// Reset view
 function resetView() {
     zoomLevel = 1;
     imageOffset = { x: 0, y: 0 };
     applyZoom();
 }
 
-// Calculate distance between two touch points (for pinch gesture)
+// Mobile gesture functions
 function getDistance(touch1, touch2) {
     const dx = touch1.clientX - touch2.clientX;
     const dy = touch1.clientY - touch2.clientY;
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-// Get center point between two touches
 function getTouchCenter(touch1, touch2) {
     return {
         x: (touch1.clientX + touch2.clientX) / 2,
@@ -363,30 +493,25 @@ function getTouchCenter(touch1, touch2) {
     };
 }
 
-// Handle touch start for gestures
 function handleTouchStart(e) {
     const touches = e.touches;
     touchStartTime = Date.now();
     
     if (touches.length === 1) {
-        // Single touch - potential swipe or drag
         touchStartX = touches[0].clientX;
         touchStartY = touches[0].clientY;
         
-        // Start dragging if zoomed
         if (zoomLevel > 1 && !isTransitioning) {
             isDragging = true;
             startPosition.x = touches[0].clientX - imageOffset.x;
             startPosition.y = touches[0].clientY - imageOffset.y;
         }
     } else if (touches.length === 2) {
-        // Two touches - pinch gesture
         isPinching = true;
         isDragging = false;
         initialPinchDistance = getDistance(touches[0], touches[1]);
         initialZoomLevel = zoomLevel;
         
-        // Store initial touch center for zoom origin
         const center = getTouchCenter(touches[0], touches[1]);
         startPosition.x = center.x;
         startPosition.y = center.y;
@@ -395,27 +520,22 @@ function handleTouchStart(e) {
     e.preventDefault();
 }
 
-// Handle touch move for gestures
 function handleTouchMove(e) {
     const touches = e.touches;
     
     if (touches.length === 1 && isDragging && zoomLevel > 1 && !isTransitioning) {
-        // Single touch drag when zoomed
         imageOffset.x = touches[0].clientX - startPosition.x;
         imageOffset.y = touches[0].clientY - startPosition.y;
         
-        // Limit drag to reasonable bounds
         const maxOffset = 1000;
         imageOffset.x = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.x));
         imageOffset.y = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.y));
         
         applyZoom();
     } else if (touches.length === 2 && isPinching && !isTransitioning) {
-        // Two touch pinch gesture
         const currentDistance = getDistance(touches[0], touches[1]);
         const scale = currentDistance / initialPinchDistance;
         
-        // Calculate new zoom level
         const newZoomLevel = Math.max(0.5, Math.min(10, initialZoomLevel * scale));
         zoomLevel = newZoomLevel;
         
@@ -425,7 +545,6 @@ function handleTouchMove(e) {
     e.preventDefault();
 }
 
-// Handle touch end for gestures
 function handleTouchEnd(e) {
     const touchEndTime = Date.now();
     const touchDuration = touchEndTime - touchStartTime;
@@ -439,23 +558,18 @@ function handleTouchEnd(e) {
         const absDeltaX = Math.abs(deltaX);
         const absDeltaY = Math.abs(deltaY);
         
-        // Check if this is a horizontal swipe (and not just a tap or vertical scroll)
         if (absDeltaX > swipeThreshold && absDeltaX > absDeltaY && zoomLevel <= 1) {
             if (deltaX > 0) {
-                // Swipe right - go to previous page
                 previousPage();
             } else {
-                // Swipe left - go to next page
                 nextPage();
             }
         }
     }
     
-    // Reset gesture states
     isDragging = false;
     isPinching = false;
     
-    // If zoom is very small, reset to fit screen
     if (zoomLevel < 0.8) {
         fitToScreen();
     }
@@ -466,23 +580,17 @@ function addEventListeners() {
     const imageWrapper = document.getElementById('image-wrapper');
     const container = document.getElementById('viewer-container');
     
-    // Mouse events for dragging (desktop)
     imageWrapper.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', endDrag);
     
-    // Enhanced touch events for mobile gestures
     imageWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
     document.addEventListener('touchmove', handleTouchMove, { passive: false });
     document.addEventListener('touchend', handleTouchEnd, { passive: false });
     
-    // Mouse wheel for zoom
     container.addEventListener('wheel', handleWheel);
-    
-    // Keyboard navigation
     document.addEventListener('keydown', handleKeyboard);
     
-    // Double-click/tap to zoom
     imageWrapper.addEventListener('dblclick', function(e) {
         e.preventDefault();
         if (zoomLevel === 1) {
@@ -492,12 +600,10 @@ function addEventListeners() {
         }
     });
     
-    // Prevent context menu on right-click
     imageWrapper.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
     
-    // Prevent default touch behaviors to avoid scrolling issues
     document.addEventListener('touchstart', function(e) {
         if (e.target.closest('#image-wrapper')) {
             e.preventDefault();
@@ -511,7 +617,7 @@ function addEventListeners() {
     }, { passive: false });
 }
 
-// Original drag functions for mouse (desktop)
+// Mouse drag functions
 function startDrag(e) {
     if (zoomLevel > 1 && !isTransitioning) {
         isDragging = true;
@@ -526,7 +632,6 @@ function drag(e) {
         imageOffset.x = e.clientX - startPosition.x;
         imageOffset.y = e.clientY - startPosition.y;
         
-        // Limit drag to reasonable bounds
         const maxOffset = 1000;
         imageOffset.x = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.x));
         imageOffset.y = Math.max(-maxOffset, Math.min(maxOffset, imageOffset.y));
@@ -540,7 +645,6 @@ function endDrag() {
     isDragging = false;
 }
 
-// Mouse wheel zoom
 function handleWheel(e) {
     if (!isTransitioning) {
         e.preventDefault();
@@ -552,7 +656,6 @@ function handleWheel(e) {
     }
 }
 
-// Keyboard navigation
 function handleKeyboard(e) {
     if (isTransitioning) return;
     
@@ -589,7 +692,6 @@ function handleKeyboard(e) {
         case 'Escape':
             e.preventDefault();
             fitToScreen();
-            // Also close TOC if open
             const dropdown = document.getElementById('tocDropdown');
             const button = document.getElementById('tocButton');
             dropdown.classList.remove('show');
@@ -598,20 +700,17 @@ function handleKeyboard(e) {
     }
 }
 
-// Update page info display
 function updatePageInfo() {
-    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+    const pageDisplay = getCurrentPageNumber();
+    document.getElementById('pageInfo').textContent = `Page ${pageDisplay} of ${totalPages}`;
 }
 
-// Update navigation button states
 function updateNavigationButtons() {
     document.getElementById('prevBtn').disabled = currentPage === 1 || isTransitioning;
     document.getElementById('nextBtn').disabled = currentPage === totalPages || isTransitioning;
 }
 
-// Handle window resize
 window.addEventListener('resize', function() {
-    // Reset zoom on resize to ensure proper fitting
     setTimeout(() => {
         if (zoomLevel === 1) {
             resetView();
