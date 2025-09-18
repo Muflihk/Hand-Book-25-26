@@ -1,11 +1,11 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Simple Image Viewer CSS with Teal Theme */
+/* Simple Image Viewer CSS with Blue Theme */
 html, body {
     margin: 0;
     padding: 0;
-    background: #1e5e63; /* Dark teal background */
+    background: #1B5471; /* Dark blue background */
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     width: 100vw;
@@ -17,11 +17,11 @@ html, body {
 
 /* Header Section */
 .header {
-    background: #125459;
+    background: #0F3A4D; /* Darker blue for header */
     color: white;
     text-align: center;
     padding: 15px 20px;
-    border-bottom: 2px solid #2e8b90;
+    border-bottom: 2px solid #6688C3; /* Light blue border */
 }
 
 .header h1 {
@@ -53,7 +53,7 @@ html, body {
 
 /* Control bar */
 .control-bar {
-    background: #236e75;
+    background: #81B4C6; /* Light blue for control bar */
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -77,7 +77,7 @@ html, body {
 
 /* Table of Contents Button */
 .toc-button {
-    background: #1f7a82;
+    background: #6688C3; /* Medium blue for TOC button */
     color: white;
     border: none;
     padding: 12px 24px;
@@ -96,7 +96,7 @@ html, body {
 }
 
 .toc-button:hover {
-    background: #1a6d75;
+    background: #5577B2; /* Darker blue on hover */
 }
 
 /* TOC Modal Styles */
@@ -135,14 +135,14 @@ html, body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 25px;
-    border-bottom: 2px solid #b2ebf2;
-    background: #e0f7f9;
+    border-bottom: 2px solid #B8D4E3; /* Light blue border */
+    background: #E9F4F8; /* Very light blue background */
     border-radius: 12px 12px 0 0;
 }
 
 .toc-modal-header h3 {
     margin: 0;
-    color: #003d42;
+    color: #0F3A4D; /* Dark blue text */
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
     font-weight: 600;
@@ -153,7 +153,7 @@ html, body {
     border: none;
     font-size: 28px;
     cursor: pointer;
-    color: #003d42;
+    color: #0F3A4D; /* Dark blue */
     padding: 0;
     width: 35px;
     height: 35px;
@@ -165,7 +165,7 @@ html, body {
 }
 
 .toc-close:hover {
-    background: rgba(0,61,66,0.1);
+    background: rgba(15,58,77,0.1);
 }
 
 .toc-modal-body {
@@ -180,7 +180,7 @@ html, body {
 .toc-item {
     padding: 16px 25px;
     cursor: pointer;
-    border-bottom: 1px solid #e0f7f9;
+    border-bottom: 1px solid #E9F4F8; /* Very light blue border */
     color: #333;
     font-family: 'Inter', sans-serif;
     font-size: 15px;
@@ -192,8 +192,8 @@ html, body {
 }
 
 .toc-item:hover {
-    background: #b2ebf2;
-    color: #003d42;
+    background: #B8D4E3; /* Light blue on hover */
+    color: #0F3A4D; /* Dark blue text */
 }
 
 .toc-item:last-child {
@@ -201,28 +201,28 @@ html, body {
 }
 
 .toc-item.current {
-    background: #80deea;
-    color: #003d42;
+    background: #81B4C6; /* Medium light blue for current item */
+    color: #0F3A4D; /* Dark blue text */
     font-weight: 600;
-    border-left: 4px solid #1f7a82;
+    border-left: 4px solid #6688C3; /* Blue accent */
 }
 
 .toc-item.major-section {
     font-weight: 600;
     font-size: 16px;
-    color: #003d42;
-    background-color: #f0fffe;
+    color: #0F3A4D; /* Dark blue text */
+    background-color: #F3F8FB; /* Very light blue background */
     letter-spacing: 0.2px;
     padding: 18px 25px;
 }
 
 .toc-item.major-section:hover {
-    background-color: #e0f7f9;
+    background-color: #E9F4F8; /* Light blue on hover */
 }
 
 .toc-item.major-section.current {
-    background: #66d9e8;
-    color: #003d42;
+    background: #6688C3; /* Blue for current major section */
+    color: white;
     font-weight: 700;
 }
 
@@ -244,7 +244,7 @@ html, body {
 }
 
 .control-bar button {
-    background: #2e8b90;
+    background: #6688C3; /* Blue for other buttons */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -258,11 +258,11 @@ html, body {
 }
 
 .control-bar button:hover {
-    background: #26808a;
+    background: #5577B2; /* Darker blue on hover */
 }
 
 .control-bar button:disabled {
-    background: #4db6bd;
+    background: #9BB5CC; /* Light blue for disabled */
     cursor: not-allowed;
     opacity: 0.5;
 }
@@ -272,7 +272,7 @@ html, body {
     flex: 1;
     position: relative;
     overflow: hidden;
-    background: #1e5e63;
+    background: #1B5471; /* Dark blue background for viewer */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -328,7 +328,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     font-size: 18px;
-    background: rgba(18, 84, 89, 0.9);
+    background: rgba(15, 58, 77, 0.9); /* Dark blue background */
     padding: 20px;
     border-radius: 8px;
     display: none;
@@ -347,7 +347,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
-    background: rgba(198, 40, 40, 0.9);
+    background: rgba(198, 40, 40, 0.9); /* Keep red for errors */
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -383,7 +383,7 @@ html, body {
 }
 
 .bottom-bar {
-    background: #236e75;
+    background: #81B4C6; /* Light blue for bottom bar */
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -518,7 +518,6 @@ html, body {
         max-height: 95vh;
     }
     
-    /* Mobile Modal Adjustments */
     .toc-modal-content {
         width: 95%;
         max-height: 90vh;
@@ -564,16 +563,16 @@ html, body {
 }
 
 #viewer-container::-webkit-scrollbar-track {
-    background: #236e75;
+    background: #81B4C6; /* Light blue scrollbar track */
 }
 
 #viewer-container::-webkit-scrollbar-thumb {
-    background: #2e8b90;
+    background: #6688C3; /* Blue scrollbar thumb */
     border-radius: 6px;
 }
 
 #viewer-container::-webkit-scrollbar-thumb:hover {
-    background: #26808a;
+    background: #5577B2; /* Darker blue on hover */
 }
 
 /* Custom scrollbar for modal */
@@ -582,16 +581,16 @@ html, body {
 }
 
 .toc-modal-body::-webkit-scrollbar-track {
-    background: #f0fffe;
+    background: #F3F8FB; /* Very light blue scrollbar track */
 }
 
 .toc-modal-body::-webkit-scrollbar-thumb {
-    background: #4db6bd;
+    background: #9BB5CC; /* Light blue scrollbar thumb */
     border-radius: 4px;
 }
 
 .toc-modal-body::-webkit-scrollbar-thumb:hover {
-    background: #26a69a;
+    background: #81B4C6; /* Medium blue on hover */
 }
 
 /* Smooth transition styles for page changes */
@@ -603,20 +602,4 @@ html, body {
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-}
-
-.slide-in-right {
-    transform: translate(50%, -50%);
-}
-
-.slide-in-left {
-    transform: translate(-150%, -50%);
-}
-
-.slide-out-right {
-    transform: translate(50%, -50%);
-}
-
-.slide-out-left {
-    transform: translate(-150%, -50%);
 }
