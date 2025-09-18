@@ -502,7 +502,7 @@ html, body {
 /* Additional fix for very small screens */
 @media (max-width: 400px) {
     .toc-dropdown {
-        min-width: 360px;
+        min-width: 320px;
         max-width: 95vw;
         left: 0;
         right: 10px;
@@ -586,5 +586,6 @@ html, body {
 .slide-out-left {
     transform: translate(-150%, -50%);
 }
+
 
 
