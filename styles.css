@@ -1,9 +1,12 @@
-/* Simple Image Viewer CSS with Blue Theme */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Simple Image Viewer CSS with Teal Theme */
 html, body {
     margin: 0;
     padding: 0;
-    background: #1a237e; /* Dark blue background */
-    font-family: Arial, sans-serif;
+    background: #1e5e63; /* Dark teal background */
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font stack */
     height: 100vh;
     width: 100vw;
     overflow: hidden;
@@ -14,37 +17,43 @@ html, body {
 
 /* Header Section */
 .header {
-    background: #0d1a5c; /* Darker blue for header */
+    background: #125459; /* Darker teal for header */
     color: white;
     text-align: center;
     padding: 15px 20px;
-    border-bottom: 2px solid #3f51b5; /* Blue border */
+    border-bottom: 2px solid #2e8b90; /* Teal border */
 }
 
 .header h1 {
     margin: 0 0 8px 0;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 26px; /* Increased */
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    letter-spacing: 0.5px;
     color: white;
 }
 
 .header h2 {
     margin: 0 0 8px 0;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 22px; /* Increased */
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 0.3px;
     color: white;
 }
 
 .header h3 {
     margin: 0;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 18px; /* Increased */
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.2px;
     color: white;
 }
 
 /* Control bar */
 .control-bar {
-    background: #283593; /* Medium blue for control bar */
+    background: #236e75; /* Medium teal for control bar */
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -74,24 +83,26 @@ html, body {
 }
 
 .toc-button {
-    background: #1976d2; /* Blue for TOC button */
+    background: #1f7a82; /* Teal for TOC button */
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 12px 24px; /* Increased padding */
+    border-radius: 6px; /* Slightly more rounded */
     cursor: pointer;
-    font-size: 14px;
+    font-family: 'Poppins', 'Inter', sans-serif; /* Modern font */
+    font-size: 15px; /* Increased from 14px */
     font-weight: 500;
-    transition: background 0.2s ease;
+    letter-spacing: 0.3px; /* Better letter spacing */
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 8px;
-    min-width: 140px;
+    min-width: 150px; /* Slightly wider */
     justify-content: center;
 }
 
 .toc-button:hover {
-    background: #1565c0; /* Darker blue on hover */
+    background: #1a6d75; /* Darker teal on hover */
 }
 
 .toc-button::after {
@@ -109,15 +120,20 @@ html, body {
     top: 100%;
     left: 0;
     background: white;
-    border: 1px solid #2196f3; /* Blue border for dropdown */
+    border: 1px solid #2e8b90; /* Teal border for dropdown */
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: 400px;
+    min-width: 350px;
     max-width: 400px;
     max-height: 400px;
     overflow-y: auto;
     z-index: 1000;
     display: none;
+    
+    /* Enhanced scrolling for mobile */
+    -webkit-overflow-scrolling: touch; /* Smooth momentum scrolling on iOS */
+    overscroll-behavior: contain; /* Prevent body scroll when at top/bottom */
+    scroll-behavior: smooth; /* Smooth scrolling */
 }
 
 .toc-dropdown.show {
@@ -126,12 +142,15 @@ html, body {
 }
 
 .toc-item {
-    padding: 12px 18px;
+    padding: 14px 20px; /* Increased padding */
     cursor: pointer;
-    border-bottom: 1px solid #e3f2fd; /* Light blue border */
+    border-bottom: 1px solid #b2ebf2; /* Light teal border */
     color: #333;
-    font-size: 14px;
-    line-height: 1.4;
+    font-family: 'Inter', sans-serif; /* Modern font */
+    font-size: 15px; /* Increased from 14px */
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.1px;
     transition: background 0.2s ease;
     white-space: nowrap;
     overflow: hidden;
@@ -139,7 +158,7 @@ html, body {
 }
 
 .toc-item:hover {
-    background: #e3f2fd; /* Light blue on hover */
+    background: #b2ebf2; /* Light teal on hover */
 }
 
 .toc-item:last-child {
@@ -147,26 +166,27 @@ html, body {
 }
 
 .toc-item.current {
-    background: #bbdefb; /* Light blue for current item */
-    color: #0d47a1; /* Dark blue text */
+    background: #80deea; /* Light teal for current item */
+    color: #003d42; /* Dark teal text */
     font-weight: bold;
 }
 
 /* Major section headings - make them bold */
 .toc-item.major-section {
-    font-weight: bold;
-    font-size: 15px;
-    color: #0d47a1; /* Dark blue text */
-    background-color: #f3f8ff; /* Very light blue background */
+    font-weight: 600; /* Bolder for major sections */
+    font-size: 16px; /* Larger for major sections */
+    color: #003d42; /* Dark teal text */
+    background-color: #e0f7f9; /* Very light teal background */
+    letter-spacing: 0.2px;
 }
 
 .toc-item.major-section:hover {
-    background-color: #e8f2ff; /* Slightly darker light blue on hover */
+    background-color: #b2ebf2; /* Slightly darker light teal on hover */
 }
 
 .toc-item.major-section.current {
-    background: #c5e1fd; /* Medium light blue for current major section */
-    color: #0d47a1; /* Dark blue text */
+    background: #66d9e8; /* Medium light teal for current major section */
+    color: #003d42; /* Dark teal text */
     font-weight: bold;
 }
 
@@ -176,22 +196,25 @@ html, body {
 }
 
 .control-bar button {
-    background: #3f51b5; /* Blue for other buttons */
+    background: #2e8b90; /* Teal for other buttons */
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 10px 20px; /* Increased padding */
+    border-radius: 6px; /* More rounded */
     cursor: pointer;
-    font-size: 14px;
-    transition: background 0.2s ease;
+    font-family: 'Poppins', 'Inter', sans-serif; /* Modern font */
+    font-size: 15px; /* Increased from 14px */
+    font-weight: 500;
+    letter-spacing: 0.3px; /* Better spacing */
+    transition: all 0.2s ease;
 }
 
 .control-bar button:hover {
-    background: #3949ab; /* Darker blue on hover */
+    background: #26808a; /* Darker teal on hover */
 }
 
 .control-bar button:disabled {
-    background: #5c6bc0; /* Lighter blue for disabled */
+    background: #4db6bd; /* Lighter teal for disabled */
     cursor: not-allowed;
     opacity: 0.5;
 }
@@ -201,7 +224,7 @@ html, body {
     flex: 1;
     position: relative;
     overflow: hidden;
-    background: #1a237e; /* Dark blue background for viewer */
+    background: #1e5e63; /* Dark teal background for viewer */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -266,7 +289,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     font-size: 18px;
-    background: rgba(13, 26, 92, 0.9); /* Dark blue background */
+    background: rgba(18, 84, 89, 0.9); /* Dark teal background */
     padding: 20px;
     border-radius: 8px;
     display: none;
@@ -325,7 +348,7 @@ html, body {
 
 /* Bottom page info bar */
 .bottom-bar {
-    background: #283593; /* Medium blue for bottom bar */
+    background: #236e75; /* Medium teal for bottom bar */
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -337,9 +360,11 @@ html, body {
 }
 
 #pageInfo {
-    font-weight: bold;
+    font-weight: 600;
     color: #fff;
-    font-size: 16px;
+    font-size: 17px; /* Increased */
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
     text-align: center;
 }
 
@@ -360,7 +385,7 @@ html, body {
     }
     
     .toc-dropdown {
-        min-width: 320px;
+        min-width: 250px;
     }
 }
 
@@ -376,19 +401,19 @@ html, body {
     }
     
     .control-bar button {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 8px 16px;
+        font-size: 14px; /* Increased from 12px */
     }
     
     .toc-button {
-        padding: 8px 16px;
-        font-size: 12px;
-        min-width: 120px;
+        padding: 10px 18px;
+        font-size: 14px; /* Increased from 12px */
+        min-width: 130px;
     }
     
     .toc-dropdown {
-        min-width: 280px;
-        max-width: 90vw;
+        min-width: 300;
+        max-width: 85vw;
     }
     
     /* Tablet portrait: Larger than desktop for touch interface */
@@ -404,15 +429,15 @@ html, body {
     }
     
     .header h1 {
-        font-size: 16px;
+        font-size: 18px; /* Increased from 16px */
     }
     
     .header h2 {
-        font-size: 14px;
+        font-size: 16px; /* Increased from 14px */
     }
     
     .header h3 {
-        font-size: 12px;
+        font-size: 14px; /* Increased from 12px */
     }
     
     .control-bar {
@@ -438,9 +463,11 @@ html, body {
     /* Ensure both buttons have the same height */
     .button-row button,
     .toc-button {
-        height: 44px; /* Fixed height for consistency */
-        padding: 10px 16px;
-        font-size: 13px;
+        height: 46px; /* Slightly taller for better touch */
+        padding: 12px 18px;
+        font-size: 14px; /* Increased from 13px */
+        font-weight: 500;
+        letter-spacing: 0.2px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -455,7 +482,7 @@ html, body {
     /* Fit Screen button */
     .control-bar > .button-row > button:not(.toc-button) {
         flex: 1;
-        height: 44px; /* Same height as TOC button */
+        height: 46px; /* Same height as TOC button */
     }
     
     /* Hide navigation controls on mobile */
@@ -470,18 +497,25 @@ html, body {
     }
     
     .toc-dropdown {
-        min-width: 380px;
-        max-width: 98vw;
+        min-width: 300;
+        max-width: 92vw;
         left: 0;
         transform: none;
-        max-height: 400px;
+        max-height: 60vh; /* Changed from 400px to viewport-based height */
         right: auto;
+        
+        /* Enhanced mobile scrolling */
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scroll-behavior: smooth;
+        touch-action: pan-y; /* Allow only vertical scrolling */
     }
     
     .toc-item {
-        padding: 12px 16px;
-        font-size: 13px;
+        padding: 16px 18px; /* Larger touch targets */
+        font-size: 14px; /* Increased from 13px */
         white-space: normal;
+        min-height: 20px; /* Ensure minimum touch target size */
     }
     
     .bottom-bar {
@@ -489,7 +523,7 @@ html, body {
     }
     
     #pageInfo {
-        font-size: 14px;
+        font-size: 15px; /* Increased from 14px */
     }
     
     /* Mobile: Use full width for better readability */
@@ -502,8 +536,8 @@ html, body {
 /* Additional fix for very small screens */
 @media (max-width: 400px) {
     .toc-dropdown {
-        min-width: 320px;
-        max-width: 95vw;
+        min-width: 300;
+        max-width: 90vw;
         left: 0;
         right: 10px;
     }
@@ -529,34 +563,42 @@ html, body {
 }
 
 #viewer-container::-webkit-scrollbar-track {
-    background: #283593; /* Blue scrollbar track */
+    background: #236e75; /* Teal scrollbar track */
 }
 
 #viewer-container::-webkit-scrollbar-thumb {
-    background: #3f51b5; /* Blue scrollbar thumb */
+    background: #2e8b90; /* Teal scrollbar thumb */
     border-radius: 6px;
 }
 
 #viewer-container::-webkit-scrollbar-thumb:hover {
-    background: #3949ab; /* Darker blue on hover */
+    background: #26808a; /* Darker teal on hover */
 }
 
 /* Custom scrollbar for TOC dropdown */
 .toc-dropdown::-webkit-scrollbar {
-    width: 8px;
+    width: 6px; /* Make scrollbar thinner */
 }
 
 .toc-dropdown::-webkit-scrollbar-track {
-    background: #e3f2fd; /* Light blue scrollbar track */
+    background: #b2ebf2; /* Light teal scrollbar track */
 }
 
 .toc-dropdown::-webkit-scrollbar-thumb {
-    background: #90caf9; /* Light blue scrollbar thumb */
-    border-radius: 4px;
+    background: #4db6bd; /* Teal scrollbar thumb */
+    border-radius: 3px;
 }
 
 .toc-dropdown::-webkit-scrollbar-thumb:hover {
-    background: #64b5f6; /* Darker light blue on hover */
+    background: #26a69a; /* Darker teal on hover */
+}
+
+/* Hide scrollbar on mobile but keep functionality */
+@media (max-width: 480px) {
+    .toc-dropdown::-webkit-scrollbar {
+        width: 0px; /* Hide scrollbar on mobile */
+        background: transparent;
+    }
 }
 
 /* Smooth transition styles for page changes */
@@ -586,6 +628,3 @@ html, body {
 .slide-out-left {
     transform: translate(-150%, -50%);
 }
-
-
-
