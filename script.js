@@ -1,4 +1,4 @@
-// Simple Image Viewer with Smooth Sliding Transitions, Table of Contents, and Mobile Gestures
+// Simple Image Viewer with Smooth Sliding Transitions, Modal Table of Contents, and Mobile Gestures
 let currentPage = 1;
 const totalPages = 182; // 10 front pages + 172 main pages
 let zoomLevel = 1;
@@ -140,71 +140,115 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePageInfo();
     updateNavigationButtons();
     addEventListeners();
-    setupDropdownCloseHandlers(); // Add this new function call
+    setupModalEventHandlers();
 });
 
-// Setup enhanced dropdown closing handlers
-function setupDropdownCloseHandlers() {
-    // Close TOC when clicking outside - improved version
+// Setup modal event handlers
+function setupModalEventHandlers() {
+    // Close modal when clicking outside
     document.addEventListener('click', function(event) {
-        const tocContainer = document.querySelector('.toc-container');
-        const dropdown = document.getElementById('tocDropdown');
-        const button = document.getElementById('tocButton');
+        const modal = document.getElementById('tocModal');
+        const modalContent = document.querySelector('.toc-modal-content');
         
-        // Check if dropdown is open and click is outside the TOC container
-        if (dropdown && dropdown.classList.contains('show') && !tocContainer.contains(event.target)) {
-            dropdown.classList.remove('show');
-            button.classList.remove('open');
+        if (modal && modal.classList.contains('show') && 
+            !modalContent.contains(event.target) && 
+            event.target === modal) {
+            closeTOCModal();
         }
     });
-
-    // Also close TOC when clicking on the main viewer area
-    const viewerContainer = document.getElementById('viewer-container');
-    if (viewerContainer) {
-        viewerContainer.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('tocDropdown');
-            const button = document.getElementById('tocButton');
-            if (dropdown && dropdown.classList.contains('show')) {
-                dropdown.classList.remove('show');
-                button.classList.remove('open');
-            }
-        });
-    }
-
-    // Close TOC when clicking on header area
-    const header = document.querySelector('.header');
-    if (header) {
-        header.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('tocDropdown');
-            const button = document.getElementById('tocButton');
-            if (dropdown && dropdown.classList.contains('show')) {
-                dropdown.classList.remove('show');
-                button.classList.remove('open');
-            }
-        });
-    }
+    
+    console.log('Modal handlers initialized');
 }
 
-// Setup Table of Contents with major section styling
+// Setup Table of Contents with modal
 function setupTableOfContents() {
-    const tocDropdown = document.getElementById('tocDropdown');
-    tocDropdown.innerHTML = '';
+    const tocModalBody = document.getElementById('tocModalBody');
+    if (!tocModalBody) {
+        console.error('TOC Modal Body not found');
+        return;
+    }
+    
+    tocModalBody.innerHTML = '';
     
     tableOfContents.forEach((item, index) => {
         const tocItem = document.createElement('div');
         tocItem.className = 'toc-item';
         
-        // Add major-section class for bold styling
         if (item.isMajor) {
             tocItem.classList.add('major-section');
         }
         
         tocItem.textContent = item.title;
-        tocItem.onclick = () => goToPageByNumber(item.page);
-        tocDropdown.appendChild(tocItem);
+        tocItem.onclick = () => {
+            goToPageByNumber(item.page);
+            closeTOCModal();
+        };
+        tocModalBody.appendChild(tocItem);
     });
     
     updateTOCHighlight();
+}
+
+// Toggle Table of Contents Modal
+function toggleTOCModal() {
+    const modal = document.getElementById('tocModal');
+    
+    if (modal.classList.contains('show')) {
+        closeTOCModal();
+    } else {
+        openTOCModal();
+    }
+}
+
+// Open TOC Modal
+function openTOCModal() {
+    const modal = document.getElementById('tocModal');
+    if (!modal) {
+        console.error('TOC Modal not found');
+        return;
+    }
+    
+    modal.classList.add('show');
+    modal.style.display = 'flex';
+    updateTOCHighlight();
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    console.log('TOC Modal opened');
+}
+
+// Close TOC Modal
+function closeTOCModal() {
+    const modal = document.getElementById('tocModal');
+    if (!modal) return;
+    
+    modal.classList.remove('show');
+    
+    // Add fade out animation
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+    
+    // Restore body scroll
+    document.body.style.overflow = '';
+    
+    console.log('TOC Modal closed');
+}
+
+// Update TOC highlight in modal
+function updateTOCHighlight() {
+    const tocItems = document.querySelectorAll('.toc-item');
+    const currentPageNumber = getCurrentPageNumber();
+    
+    tocItems.forEach((item, index) => {
+        const tocItem = tableOfContents[index];
+        if (tocItem && tocItem.page === currentPageNumber) {
+            item.classList.add('current');
+        } else {
+            item.classList.remove('current');
+        }
+    });
 }
 
 // Go to page by page number (handles both roman and arabic numerals)
@@ -231,44 +275,8 @@ function goToPageByNumber(pageNumber) {
         updateTOCHighlight();
         loadCurrentPage(direction);
         
-        // Close TOC dropdown
-        const dropdown = document.getElementById('tocDropdown');
-        const button = document.getElementById('tocButton');
-        dropdown.classList.remove('show');
-        button.classList.remove('open');
-        
         console.log('Jumped to page:', currentPage);
     }
-}
-
-// Toggle Table of Contents dropdown
-function toggleTOC() {
-    const dropdown = document.getElementById('tocDropdown');
-    const button = document.getElementById('tocButton');
-    
-    if (dropdown.classList.contains('show')) {
-        dropdown.classList.remove('show');
-        button.classList.remove('open');
-    } else {
-        dropdown.classList.add('show');
-        button.classList.add('open');
-        updateTOCHighlight();
-    }
-}
-
-// Update TOC highlight with proper major section styling
-function updateTOCHighlight() {
-    const tocItems = document.querySelectorAll('.toc-item');
-    const currentPageNumber = getCurrentPageNumber();
-    
-    tocItems.forEach((item, index) => {
-        const tocItem = tableOfContents[index];
-        if (tocItem && tocItem.page === currentPageNumber) {
-            item.classList.add('current');
-        } else {
-            item.classList.remove('current');
-        }
-    });
 }
 
 // Get current page number (roman for front pages, arabic for main)
@@ -494,6 +502,11 @@ function getTouchCenter(touch1, touch2) {
 }
 
 function handleTouchStart(e) {
+    // Don't interfere with modal touch events
+    if (e.target.closest('.toc-modal')) {
+        return;
+    }
+    
     const touches = e.touches;
     touchStartTime = Date.now();
     
@@ -521,6 +534,11 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
+    // Don't interfere with modal touch events
+    if (e.target.closest('.toc-modal')) {
+        return;
+    }
+    
     const touches = e.touches;
     
     if (touches.length === 1 && isDragging && zoomLevel > 1 && !isTransitioning) {
@@ -546,6 +564,13 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
+    // Don't interfere with modal touch events
+    if (e.changedTouches[0] && 
+        document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
+        ?.closest('.toc-modal')) {
+        return;
+    }
+    
     const touchEndTime = Date.now();
     const touchDuration = touchEndTime - touchStartTime;
     
@@ -603,18 +628,6 @@ function addEventListeners() {
     imageWrapper.addEventListener('contextmenu', function(e) {
         e.preventDefault();
     });
-    
-    document.addEventListener('touchstart', function(e) {
-        if (e.target.closest('#image-wrapper')) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-    
-    document.addEventListener('touchmove', function(e) {
-        if (e.target.closest('#image-wrapper')) {
-            e.preventDefault();
-        }
-    }, { passive: false });
 }
 
 // Mouse drag functions
@@ -659,6 +672,17 @@ function handleWheel(e) {
 function handleKeyboard(e) {
     if (isTransitioning) return;
     
+    // Close modal with Escape key
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('tocModal');
+        if (modal && modal.classList.contains('show')) {
+            closeTOCModal();
+            return;
+        }
+        fitToScreen();
+        return;
+    }
+    
     switch(e.key) {
         case 'ArrowLeft':
             e.preventDefault();
@@ -689,14 +713,6 @@ function handleKeyboard(e) {
             e.preventDefault();
             fitToScreen();
             break;
-        case 'Escape':
-            e.preventDefault();
-            fitToScreen();
-            const dropdown = document.getElementById('tocDropdown');
-            const button = document.getElementById('tocButton');
-            dropdown.classList.remove('show');
-            button.classList.remove('open');
-            break;
     }
 }
 
@@ -706,8 +722,11 @@ function updatePageInfo() {
 }
 
 function updateNavigationButtons() {
-    document.getElementById('prevBtn').disabled = currentPage === 1 || isTransitioning;
-    document.getElementById('nextBtn').disabled = currentPage === totalPages || isTransitioning;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (prevBtn) prevBtn.disabled = currentPage === 1 || isTransitioning;
+    if (nextBtn) nextBtn.disabled = currentPage === totalPages || isTransitioning;
 }
 
 window.addEventListener('resize', function() {
@@ -717,114 +736,3 @@ window.addEventListener('resize', function() {
         }
     }, 100);
 });
-// Replace the old TOC dropdown functions with these modal functions
-
-// Toggle Table of Contents Modal
-function toggleTOCModal() {
-    const modal = document.getElementById('tocModal');
-    
-    if (modal.classList.contains('show')) {
-        closeTOCModal();
-    } else {
-        openTOCModal();
-    }
-}
-
-// Open TOC Modal
-function openTOCModal() {
-    const modal = document.getElementById('tocModal');
-    modal.classList.add('show');
-    modal.style.display = 'flex';
-    updateTOCHighlight();
-    
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
-    
-    // Add escape key listener
-    document.addEventListener('keydown', handleModalEscape);
-    
-    console.log('TOC Modal opened');
-}
-
-// Close TOC Modal
-function closeTOCModal() {
-    const modal = document.getElementById('tocModal');
-    modal.classList.remove('show');
-    
-    // Add fade out animation
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
-    
-    // Restore body scroll
-    document.body.style.overflow = '';
-    
-    // Remove escape key listener
-    document.removeEventListener('keydown', handleModalEscape);
-    
-    console.log('TOC Modal closed');
-}
-
-// Handle escape key to close modal
-function handleModalEscape(e) {
-    if (e.key === 'Escape') {
-        closeTOCModal();
-    }
-}
-
-// Setup Table of Contents with modal
-function setupTableOfContents() {
-    const tocModalBody = document.getElementById('tocModalBody');
-    tocModalBody.innerHTML = '';
-    
-    tableOfContents.forEach((item, index) => {
-        const tocItem = document.createElement('div');
-        tocItem.className = 'toc-item';
-        
-        if (item.isMajor) {
-            tocItem.classList.add('major-section');
-        }
-        
-        tocItem.textContent = item.title;
-        tocItem.onclick = () => {
-            goToPageByNumber(item.page);
-            closeTOCModal(); // Close modal after selection
-        };
-        tocModalBody.appendChild(tocItem);
-    });
-    
-    updateTOCHighlight();
-}
-
-// Update TOC highlight in modal
-function updateTOCHighlight() {
-    const tocItems = document.querySelectorAll('.toc-item');
-    const currentPageNumber = getCurrentPageNumber();
-    
-    tocItems.forEach((item, index) => {
-        const tocItem = tableOfContents[index];
-        if (tocItem && tocItem.page === currentPageNumber) {
-            item.classList.add('current');
-        } else {
-            item.classList.remove('current');
-        }
-    });
-}
-
-// Close modal when clicking outside
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('tocModal');
-    const modalContent = document.querySelector('.toc-modal-content');
-    
-    if (modal && modal.classList.contains('show') && 
-        !modalContent.contains(event.target) && 
-        event.target === modal) {
-        closeTOCModal();
-    }
-});
-
-// Remove the old dropdown-related functions and replace setupDropdownCloseHandlers with:
-function setupDropdownCloseHandlers() {
-    // This function is now handled by the modal click handlers above
-    console.log('Modal handlers initialized');
-}
