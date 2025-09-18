@@ -23,15 +23,12 @@ let swipeTimeThreshold = 300;
 const tableOfContents = [
     // Front pages (Roman numerals)
     { title: "Cover", page: "i", isMajor: false },
-    { title: "--", page: "ii", isMajor: false },
+  
     { title: "College Prayer", page: "iii", isMajor: false },
     { title: "Student Profile", page: "iv", isMajor: false },
     { title: "Pledge", page: "v", isMajor: false },
     { title: "Tribute", page: "vi", isMajor: false },
-    { title: "Contents", page: "vii", isMajor: false },
-    { title: "Contents", page: "viii", isMajor: false },
-    { title: "Contents", page: "ix", isMajor: false },
-    { title: "--", page: "x", isMajor: false },
+  
     
     // Main content (Arabic numerals) - Major sections marked
     { title: "1. College Profile", page: "1", isMajor: true },
@@ -736,3 +733,4 @@ window.addEventListener('resize', function() {
         }
     }, 100);
 });
+
