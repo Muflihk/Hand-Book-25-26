@@ -1,13 +1,16 @@
-// Simple Image Viewer with Smooth Sliding Transitions, Modal Table of Contents, and Mobile Gestures
+// Handbook Viewer - Version 1.0
+// WMO Arts & Science College
+
+// Global State
 let currentPage = 1;
-const totalPages = 182; // 10 front pages + 172 main pages
+const totalPages = 182;
 let zoomLevel = 1;
 let isDragging = false;
 let startPosition = { x: 0, y: 0 };
 let imageOffset = { x: 0, y: 0 };
 let isTransitioning = false;
 
-// Mobile gesture variables
+// Mobile Gesture Variables
 let touchStartTime = 0;
 let touchStartX = 0;
 let touchStartY = 0;
@@ -16,28 +19,23 @@ let touchEndY = 0;
 let initialPinchDistance = 0;
 let initialZoomLevel = 1;
 let isPinching = false;
-let swipeThreshold = 50;
-let swipeTimeThreshold = 300;
+const swipeThreshold = 50;
+const swipeTimeThreshold = 300;
 
-// Complete Table of Contents based on your handbook (pages 1-172)
+// Table of Contents Data
 const tableOfContents = [
-    // Front pages (Roman numerals)
     { title: "Cover", page: "i", isMajor: false },
     { title: "--", page: "ii", isMajor: false },
     { title: "College Prayer", page: "iii", isMajor: false },
     { title: "Student Profile", page: "iv", isMajor: false },
     { title: "Pledge", page: "v", isMajor: false },
     { title: "Tribute", page: "vi", isMajor: false },
-  
-    
-    // Main content (Arabic numerals) - Major sections marked
     { title: "1. College Profile", page: "1", isMajor: true },
     { title: "1.1 About WMO", page: "1", isMajor: false },
     { title: "1.2 About the college", page: "2", isMajor: false },
     { title: "1.3 Managing Committee", page: "4", isMajor: false },
     { title: "1.4 Growth and Expansion", page: "5", isMajor: false },
     { title: "1.5 Major Achievements", page: "6", isMajor: false },
-    
     { title: "2. Academic Programs", page: "6", isMajor: true },
     { title: "2.1 Department of Arabic", page: "7", isMajor: false },
     { title: "2.2 Department of Chemistry", page: "15", isMajor: false },
@@ -54,19 +52,16 @@ const tableOfContents = [
     { title: "2.13 Department of Hindi", page: "86", isMajor: false },
     { title: "2.14 Department of Malayalam", page: "90", isMajor: false },
     { title: "2.15 Department of Physical Education", page: "92", isMajor: false },
-    
     { title: "3. Academic Support", page: "94", isMajor: true },
     { title: "3.1 Library", page: "95", isMajor: false },
     { title: "3.2 Administrative Staff", page: "96", isMajor: false },
     { title: "3.3 Examination Cell", page: "98", isMajor: false },
     { title: "3.4 Digital Infrastructure", page: "99", isMajor: false },
-    
     { title: "4. Institutional Innovation and Development", page: "101", isMajor: true },
     { title: "4.1 Institution Innovation Council", page: "101", isMajor: false },
     { title: "4.2 IEDC", page: "101", isMajor: false },
     { title: "4.3 YIP", page: "101", isMajor: false },
     { title: "4.4 IETE Student Forum", page: "102", isMajor: false },
-    
     { title: "5. Governing Bodies and Committees", page: "103", isMajor: true },
     { title: "5.1 College Council", page: "103", isMajor: false },
     { title: "5.2 Internal Quality Assurance Cell (IQAC)", page: "103", isMajor: false },
@@ -74,7 +69,6 @@ const tableOfContents = [
     { title: "5.4 Parent-Teacher Association (PTA)", page: "105", isMajor: false },
     { title: "5.5 Exam Monitoring Cell", page: "105", isMajor: false },
     { title: "5.6 Outcome Assessment Council", page: "106", isMajor: false },
-    
     { title: "6. Student Life", page: "107", isMajor: true },
     { title: "6.1 College Union", page: "107", isMajor: false },
     { title: "6.2 Service and Outreach Units", page: "107", isMajor: false },
@@ -83,24 +77,20 @@ const tableOfContents = [
     { title: "6.5 Cells", page: "112", isMajor: false },
     { title: "6.6 Clubs", page: "115", isMajor: false },
     { title: "6.7 Forums", page: "117", isMajor: false },
-    
     { title: "7. Publications and Media", page: "120", isMajor: true },
     { title: "7.1 Publications Division", page: "120", isMajor: false },
     { title: "7.2 PR and Media Cell", page: "120", isMajor: false },
-    
     { title: "8. Essential Services", page: "121", isMajor: true },
     { title: "8.1 Academic Infrastructure", page: "121", isMajor: false },
     { title: "8.2 Sports and Recreation", page: "122", isMajor: false },
     { title: "8.3 Residential and Daily Life Services", page: "123", isMajor: false },
     { title: "8.4 Support and Accessibility Services", page: "124", isMajor: false },
-    
     { title: "9. Rules, Regulations and Code of Conduct", page: "126", isMajor: true },
     { title: "9.1 General Discipline", page: "126", isMajor: false },
     { title: "9.2 Attendance Rules", page: "129", isMajor: false },
     { title: "9.3 Identity Card", page: "129", isMajor: false },
     { title: "9.4 Library Rules", page: "130", isMajor: false },
     { title: "9.5 Grievance Redressal Mechanism", page: "131", isMajor: false },
-    
     { title: "10. Others", page: "132", isMajor: true },
     { title: "10.1 Fee Structure", page: "132", isMajor: false },
     { title: "10.2 Responsibility Assignment", page: "135", isMajor: false },
@@ -109,28 +99,18 @@ const tableOfContents = [
     { title: "10.5 Time Table", page: "163", isMajor: false }
 ];
 
-// Generate page file mapping for all 182 pages
+// Generate Page File Mapping
 function generatePageFileMapping() {
     const mapping = [];
-    
-    // Front pages (1-10): front1.jpg to front10.jpg
-    for (let i = 1; i <= 10; i++) {
-        mapping.push(`images/front${i}.jpg`);
-    }
-    
-    // Main pages (11-182): page1.jpg to page172.jpg
-    for (let i = 1; i <= 172; i++) {
-        mapping.push(`images/page${i}.jpg`);
-    }
-    
+    for (let i = 1; i <= 10; i++) mapping.push(`images/front${i}.jpg`);
+    for (let i = 1; i <= 172; i++) mapping.push(`images/page${i}.jpg`);
     return mapping;
 }
 
 const pageFileMapping = generatePageFileMapping();
 
-// Initialize when page loads
+// Initialize on DOM Load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing Simple Image Viewer...');
     setupImageContainer();
     setupTableOfContents();
     loadCurrentPage();
@@ -140,9 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupModalEventHandlers();
 });
 
-// Setup modal event handlers
+// Setup Modal Event Handlers
 function setupModalEventHandlers() {
-    // Close modal when clicking outside
     document.addEventListener('click', function(event) {
         const modal = document.getElementById('tocModal');
         const modalContent = document.querySelector('.toc-modal-content');
@@ -153,27 +132,19 @@ function setupModalEventHandlers() {
             closeTOCModal();
         }
     });
-    
-    console.log('Modal handlers initialized');
 }
 
-// Setup Table of Contents with modal
+// Setup Table of Contents
 function setupTableOfContents() {
     const tocModalBody = document.getElementById('tocModalBody');
-    if (!tocModalBody) {
-        console.error('TOC Modal Body not found');
-        return;
-    }
+    if (!tocModalBody) return;
     
     tocModalBody.innerHTML = '';
     
-    tableOfContents.forEach((item, index) => {
+    tableOfContents.forEach((item) => {
         const tocItem = document.createElement('div');
         tocItem.className = 'toc-item';
-        
-        if (item.isMajor) {
-            tocItem.classList.add('major-section');
-        }
+        if (item.isMajor) tocItem.classList.add('major-section');
         
         tocItem.textContent = item.title;
         tocItem.onclick = () => {
@@ -186,33 +157,21 @@ function setupTableOfContents() {
     updateTOCHighlight();
 }
 
-// Toggle Table of Contents Modal
+// Toggle TOC Modal
 function toggleTOCModal() {
     const modal = document.getElementById('tocModal');
-    
-    if (modal.classList.contains('show')) {
-        closeTOCModal();
-    } else {
-        openTOCModal();
-    }
+    modal.classList.contains('show') ? closeTOCModal() : openTOCModal();
 }
 
 // Open TOC Modal
 function openTOCModal() {
     const modal = document.getElementById('tocModal');
-    if (!modal) {
-        console.error('TOC Modal not found');
-        return;
-    }
+    if (!modal) return;
     
     modal.classList.add('show');
     modal.style.display = 'flex';
     updateTOCHighlight();
-    
-    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
-    
-    console.log('TOC Modal opened');
 }
 
 // Close TOC Modal
@@ -221,46 +180,32 @@ function closeTOCModal() {
     if (!modal) return;
     
     modal.classList.remove('show');
-    
-    // Add fade out animation
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
-    
-    // Restore body scroll
+    setTimeout(() => modal.style.display = 'none', 300);
     document.body.style.overflow = '';
-    
-    console.log('TOC Modal closed');
 }
 
-// Update TOC highlight in modal
+// Update TOC Highlight
 function updateTOCHighlight() {
     const tocItems = document.querySelectorAll('.toc-item');
     const currentPageNumber = getCurrentPageNumber();
     
     tocItems.forEach((item, index) => {
         const tocItem = tableOfContents[index];
-        if (tocItem && tocItem.page === currentPageNumber) {
-            item.classList.add('current');
-        } else {
-            item.classList.remove('current');
-        }
+        item.classList.toggle('current', tocItem && tocItem.page === currentPageNumber);
     });
 }
 
-// Go to page by page number (handles both roman and arabic numerals)
+// Navigate to Page by Number
 function goToPageByNumber(pageNumber) {
     let targetIndex;
     
     if (typeof pageNumber === 'string' && pageNumber.match(/^[ivxlc]+$/i)) {
-        // Roman numeral - convert to index
         const romanToIndex = {
             'i': 1, 'ii': 2, 'iii': 3, 'iv': 4, 'v': 5,
             'vi': 6, 'vii': 7, 'viii': 8, 'ix': 9, 'x': 10
         };
         targetIndex = romanToIndex[pageNumber.toLowerCase()];
     } else {
-        // Arabic numeral - add 10 for front pages offset
         targetIndex = parseInt(pageNumber) + 10;
     }
     
@@ -271,41 +216,21 @@ function goToPageByNumber(pageNumber) {
         updateNavigationButtons();
         updateTOCHighlight();
         loadCurrentPage(direction);
-        
-        console.log('Jumped to page:', currentPage);
     }
 }
 
-// Get current page number (roman for front pages, arabic for main)
+// Get Current Page Number (Roman or Arabic)
 function getCurrentPageNumber() {
     if (currentPage <= 10) {
         const romanNumerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
         return romanNumerals[currentPage - 1];
-    } else {
-        return (currentPage - 10).toString();
     }
+    return (currentPage - 10).toString();
 }
 
-// Go to specific page (by index)
-function goToPage(pageNumber) {
-    if (pageNumber < 1 || pageNumber > totalPages || pageNumber === currentPage || isTransitioning) {
-        return;
-    }
-    
-    const direction = pageNumber > currentPage ? 'next' : 'prev';
-    currentPage = pageNumber;
-    updatePageInfo();
-    updateNavigationButtons();
-    updateTOCHighlight();
-    loadCurrentPage(direction);
-    
-    console.log('Jumped to page:', currentPage);
-}
-
-// Setup dual image container for smooth transitions
+// Setup Image Container
 function setupImageContainer() {
     const imageWrapper = document.getElementById('image-wrapper');
-    
     imageWrapper.innerHTML = `
         <img id="handbook-image-current" class="handbook-image active" src="" alt="">
         <img id="handbook-image-next" class="handbook-image" src="" alt="">
@@ -317,7 +242,7 @@ function setupImageContainer() {
     `;
 }
 
-// Load current page image with smooth transition
+// Load Current Page with Transition
 function loadCurrentPage(direction = 'none') {
     if (isTransitioning) return;
     
@@ -325,9 +250,9 @@ function loadCurrentPage(direction = 'none') {
     const nextImg = document.getElementById('handbook-image-next');
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
-    
     const imageUrl = pageFileMapping[currentPage - 1];
     
+    // Initial load without transition
     if (direction === 'none') {
         loading.classList.add('show');
         error.style.display = 'none';
@@ -338,19 +263,18 @@ function loadCurrentPage(direction = 'none') {
             currentImg.alt = `Handbook Page ${getCurrentPageNumber()}`;
             loading.classList.remove('show');
             resetView();
-            console.log(`Page ${currentPage} loaded initially`);
         };
         
         newImage.onerror = function() {
             loading.classList.remove('show');
             error.style.display = 'block';
-            console.error(`Failed to load page ${currentPage}: ${imageUrl}`);
         };
         
         newImage.src = imageUrl;
         return;
     }
     
+    // Load with smooth transition
     isTransitioning = true;
     loading.classList.add('show');
     error.style.display = 'none';
@@ -364,22 +288,13 @@ function loadCurrentPage(direction = 'none') {
         nextImg.alt = `Handbook Page ${getCurrentPageNumber()}`;
         
         nextImg.style.transition = 'none';
-        if (direction === 'next') {
-            nextImg.style.transform = 'translate(50%, -50%)';
-        } else {
-            nextImg.style.transform = 'translate(-150%, -50%)';
-        }
-        
+        nextImg.style.transform = direction === 'next' ? 'translate(50%, -50%)' : 'translate(-150%, -50%)';
         nextImg.classList.add('active');
         nextImg.offsetHeight;
         nextImg.style.transition = 'transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease';
         
         setTimeout(() => {
-            if (direction === 'next') {
-                currentImg.style.transform = 'translate(-150%, -50%)';
-            } else {
-                currentImg.style.transform = 'translate(50%, -50%)';
-            }
+            currentImg.style.transform = direction === 'next' ? 'translate(-150%, -50%)' : 'translate(50%, -50%)';
             nextImg.style.transform = 'translate(-50%, -50%)';
             
             setTimeout(() => {
@@ -399,7 +314,6 @@ function loadCurrentPage(direction = 'none') {
                 
                 resetView();
                 isTransitioning = false;
-                console.log(`Page ${currentPage} loaded with ${direction} transition`);
             }, 350);
         }, 50);
     };
@@ -408,13 +322,12 @@ function loadCurrentPage(direction = 'none') {
         loading.classList.remove('show');
         error.style.display = 'block';
         isTransitioning = false;
-        console.error(`Failed to load page ${currentPage}: ${imageUrl}`);
     };
     
     newImage.src = imageUrl;
 }
 
-// Navigation functions
+// Navigation Functions
 function nextPage() {
     if (currentPage < totalPages && !isTransitioning) {
         currentPage++;
@@ -422,7 +335,6 @@ function nextPage() {
         updateNavigationButtons();
         updateTOCHighlight();
         loadCurrentPage('next');
-        console.log('Next page:', currentPage);
     }
 }
 
@@ -433,16 +345,14 @@ function previousPage() {
         updateNavigationButtons();
         updateTOCHighlight();
         loadCurrentPage('prev');
-        console.log('Previous page:', currentPage);
     }
 }
 
-// Zoom functions
+// Zoom Functions
 function zoomIn() {
     if (!isTransitioning) {
         zoomLevel = Math.min(zoomLevel * 1.5, 10);
         applyZoom();
-        console.log('Zoom in to:', zoomLevel);
     }
 }
 
@@ -450,7 +360,6 @@ function zoomOut() {
     if (!isTransitioning) {
         zoomLevel = Math.max(zoomLevel / 1.5, 0.1);
         applyZoom();
-        console.log('Zoom out to:', zoomLevel);
     }
 }
 
@@ -459,15 +368,12 @@ function fitToScreen() {
         zoomLevel = 1;
         imageOffset = { x: 0, y: 0 };
         applyZoom();
-        console.log('Fit to screen');
     }
 }
 
-// Apply zoom and positioning
 function applyZoom() {
     const imageWrapper = document.getElementById('image-wrapper');
-    const transform = `scale(${zoomLevel}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
-    imageWrapper.style.transform = transform;
+    imageWrapper.style.transform = `scale(${zoomLevel}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
     
     if (zoomLevel > 1) {
         document.body.classList.add('zoomed');
@@ -477,14 +383,13 @@ function applyZoom() {
     }
 }
 
-// Reset view
 function resetView() {
     zoomLevel = 1;
     imageOffset = { x: 0, y: 0 };
     applyZoom();
 }
 
-// Mobile gesture functions
+// Mobile Gesture Helpers
 function getDistance(touch1, touch2) {
     const dx = touch1.clientX - touch2.clientX;
     const dy = touch1.clientY - touch2.clientY;
@@ -498,11 +403,9 @@ function getTouchCenter(touch1, touch2) {
     };
 }
 
+// Touch Event Handlers
 function handleTouchStart(e) {
-    // Don't interfere with modal touch events
-    if (e.target.closest('.toc-modal')) {
-        return;
-    }
+    if (e.target.closest('.toc-modal')) return;
     
     const touches = e.touches;
     touchStartTime = Date.now();
@@ -531,10 +434,7 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
-    // Don't interfere with modal touch events
-    if (e.target.closest('.toc-modal')) {
-        return;
-    }
+    if (e.target.closest('.toc-modal')) return;
     
     const touches = e.touches;
     
@@ -550,10 +450,7 @@ function handleTouchMove(e) {
     } else if (touches.length === 2 && isPinching && !isTransitioning) {
         const currentDistance = getDistance(touches[0], touches[1]);
         const scale = currentDistance / initialPinchDistance;
-        
-        const newZoomLevel = Math.max(0.5, Math.min(10, initialZoomLevel * scale));
-        zoomLevel = newZoomLevel;
-        
+        zoomLevel = Math.max(0.5, Math.min(10, initialZoomLevel * scale));
         applyZoom();
     }
     
@@ -561,7 +458,6 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-    // Don't interfere with modal touch events
     if (e.changedTouches[0] && 
         document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
         ?.closest('.toc-modal')) {
@@ -581,53 +477,17 @@ function handleTouchEnd(e) {
         const absDeltaY = Math.abs(deltaY);
         
         if (absDeltaX > swipeThreshold && absDeltaX > absDeltaY && zoomLevel <= 1) {
-            if (deltaX > 0) {
-                previousPage();
-            } else {
-                nextPage();
-            }
+            deltaX > 0 ? previousPage() : nextPage();
         }
     }
     
     isDragging = false;
     isPinching = false;
     
-    if (zoomLevel < 0.8) {
-        fitToScreen();
-    }
+    if (zoomLevel < 0.8) fitToScreen();
 }
 
-// Add event listeners
-function addEventListeners() {
-    const imageWrapper = document.getElementById('image-wrapper');
-    const container = document.getElementById('viewer-container');
-    
-    imageWrapper.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', endDrag);
-    
-    imageWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
-    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-    document.addEventListener('touchend', handleTouchEnd, { passive: false });
-    
-    container.addEventListener('wheel', handleWheel);
-    document.addEventListener('keydown', handleKeyboard);
-    
-    imageWrapper.addEventListener('dblclick', function(e) {
-        e.preventDefault();
-        if (zoomLevel === 1) {
-            zoomIn();
-        } else {
-            fitToScreen();
-        }
-    });
-    
-    imageWrapper.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-}
-
-// Mouse drag functions
+// Mouse Event Handlers
 function startDrag(e) {
     if (zoomLevel > 1 && !isTransitioning) {
         isDragging = true;
@@ -658,18 +518,14 @@ function endDrag() {
 function handleWheel(e) {
     if (!isTransitioning) {
         e.preventDefault();
-        if (e.deltaY < 0) {
-            zoomIn();
-        } else {
-            zoomOut();
-        }
+        e.deltaY < 0 ? zoomIn() : zoomOut();
     }
 }
 
+// Keyboard Navigation
 function handleKeyboard(e) {
     if (isTransitioning) return;
     
-    // Close modal with Escape key
     if (e.key === 'Escape') {
         const modal = document.getElementById('tocModal');
         if (modal && modal.classList.contains('show')) {
@@ -680,39 +536,51 @@ function handleKeyboard(e) {
         return;
     }
     
-    switch(e.key) {
-        case 'ArrowLeft':
-            e.preventDefault();
-            previousPage();
-            break;
-        case 'ArrowRight':
-            e.preventDefault();
-            nextPage();
-            break;
-        case 'Home':
-            e.preventDefault();
-            goToPage(1);
-            break;
-        case 'End':
-            e.preventDefault();
-            goToPage(totalPages);
-            break;
-        case '+':
-        case '=':
-            e.preventDefault();
-            zoomIn();
-            break;
-        case '-':
-            e.preventDefault();
-            zoomOut();
-            break;
-        case '0':
-            e.preventDefault();
-            fitToScreen();
-            break;
+    const actions = {
+        'ArrowLeft': previousPage,
+        'ArrowRight': nextPage,
+        'Home': () => goToPage(1),
+        'End': () => goToPage(totalPages),
+        '+': zoomIn,
+        '=': zoomIn,
+        '-': zoomOut,
+        '0': fitToScreen
+    };
+    
+    if (actions[e.key]) {
+        e.preventDefault();
+        actions[e.key]();
     }
 }
 
+// Add All Event Listeners
+function addEventListeners() {
+    const imageWrapper = document.getElementById('image-wrapper');
+    const container = document.getElementById('viewer-container');
+    
+    // Mouse events
+    imageWrapper.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+    
+    // Touch events
+    imageWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+    // Other events
+    container.addEventListener('wheel', handleWheel);
+    document.addEventListener('keydown', handleKeyboard);
+    
+    imageWrapper.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+        zoomLevel === 1 ? zoomIn() : fitToScreen();
+    });
+    
+    imageWrapper.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+// Update UI Elements
 function updatePageInfo() {
     const pageDisplay = getCurrentPageNumber();
     document.getElementById('pageInfo').textContent = `Page ${pageDisplay} of ${totalPages}`;
@@ -726,10 +594,9 @@ function updateNavigationButtons() {
     if (nextBtn) nextBtn.disabled = currentPage === totalPages || isTransitioning;
 }
 
+// Handle Window Resize
 window.addEventListener('resize', function() {
     setTimeout(() => {
-        if (zoomLevel === 1) {
-            resetView();
-        }
+        if (zoomLevel === 1) resetView();
     }, 100);
 });
