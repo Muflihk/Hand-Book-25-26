@@ -1,16 +1,14 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Base Styles */
+/* Simple Image Viewer CSS with Blue Theme */
 html, body {
     margin: 0;
     padding: 0;
     background: #306e8d;
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
-    height: 100dvh; /* Dynamic viewport height for mobile */
     width: 100vw;
-    max-width: 100vw; /* Prevent horizontal overflow */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -24,9 +22,6 @@ html, body {
     text-align: center;
     padding: 15px 20px;
     border-bottom: 2px solid #6688C3;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 101;
 }
 
 .header h1 {
@@ -35,6 +30,7 @@ html, body {
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.5px;
+    color: white;
 }
 
 .header h2 {
@@ -43,6 +39,7 @@ html, body {
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.3px;
+    color: white;
 }
 
 .header h3 {
@@ -51,9 +48,10 @@ html, body {
     font-weight: 500;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.2px;
+    color: white;
 }
 
-/* Control Bar */
+/* Control bar */
 .control-bar {
     background: #264574;
     color: white;
@@ -64,7 +62,6 @@ html, body {
     flex-shrink: 0;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     z-index: 100;
-    position: relative;
 }
 
 .nav-controls {
@@ -78,6 +75,7 @@ html, body {
     display: contents;
 }
 
+/* Table of Contents Button */
 .toc-button {
     background: #a2abbb;
     color: white;
@@ -101,7 +99,7 @@ html, body {
     background: #5577B2;
 }
 
-/* TOC Modal */
+/* TOC Modal Styles */
 .toc-modal {
     display: none;
     position: fixed;
@@ -178,7 +176,7 @@ html, body {
     scroll-behavior: smooth;
 }
 
-/* TOC Items */
+/* TOC Items in Modal */
 .toc-item {
     padding: 16px 25px;
     cursor: pointer;
@@ -228,7 +226,7 @@ html, body {
     font-weight: 700;
 }
 
-/* Animations */
+/* Animation keyframes */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -245,7 +243,6 @@ html, body {
     }
 }
 
-/* Control Buttons */
 .control-bar button {
     background: #1d2e4b;
     color: white;
@@ -270,7 +267,7 @@ html, body {
     opacity: 0.5;
 }
 
-/* Viewer Container */
+/* Viewer container */
 #viewer-container {
     flex: 1;
     position: relative;
@@ -279,8 +276,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 0; /* Critical for flexbox child */
-    width: 100%;
 }
 
 #image-wrapper {
@@ -288,22 +283,20 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
     transition: transform 0.3s ease;
     transform-origin: center center;
     overflow: hidden;
-    will-change: transform;
 }
 
-/* Handbook Images */
 .handbook-image {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 70%;
-    max-height: 70vh;
+    max-height: 80vh;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -314,9 +307,6 @@ html, body {
     cursor: grab;
     transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease;
     opacity: 0;
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
 
 .handbook-image.active {
@@ -331,7 +321,6 @@ html, body {
     cursor: grabbing;
 }
 
-/* Loading & Error States */
 .loading {
     position: absolute;
     top: 50%;
@@ -367,6 +356,7 @@ html, body {
 
 .error h3 {
     margin: 0 0 10px 0;
+    color: white;
 }
 
 .error p {
@@ -375,11 +365,11 @@ html, body {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.6; }
+    0% { opacity: 0.6; }
     50% { opacity: 1; }
+    100% { opacity: 0.6; }
 }
 
-/* Zoomed State */
 .zoomed #viewer-container {
     overflow: auto;
 }
@@ -392,7 +382,7 @@ html, body {
     cursor: grabbing;
 }
 
-/* Bottom Bar - FIXED FOR MOBILE */
+/* BOTTOM BAR - WITH HOME BUTTON FIX */
 .bottom-bar {
     background: #2f4a53;
     color: white;
@@ -400,22 +390,22 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 20px; /* ← ADDED: spacing between elements */
     flex-shrink: 0;
     box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
     z-index: 100;
-    position: relative; /* Changed from implicit to explicit */
-    width: 100%;
 }
 
 #pageInfo {
     font-weight: 600;
+    color: #fff;
     font-size: 17px;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.3px;
+    text-align: center;
 }
 
-/* Home Button */
+/* HOME BUTTON STYLES - ADDED */
 .home-button {
     background: #1d2e4b;
     color: white;
@@ -438,92 +428,26 @@ html, body {
     background: #5577B2;
 }
 
-/* Disable Selection & Dragging */
-* {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    user-drag: none;
-}
-
-/* Custom Scrollbars */
-#viewer-container::-webkit-scrollbar,
-.toc-modal-body::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-#viewer-container::-webkit-scrollbar-track {
-    background: #81B4C6;
-}
-
-#viewer-container::-webkit-scrollbar-thumb {
-    background: #6688C3;
-    border-radius: 6px;
-}
-
-#viewer-container::-webkit-scrollbar-thumb:hover {
-    background: #5577B2;
-}
-
-.toc-modal-body::-webkit-scrollbar-track {
-    background: #F3F8FB;
-}
-
-.toc-modal-body::-webkit-scrollbar-thumb {
-    background: #9BB5CC;
-    border-radius: 4px;
-}
-
-.toc-modal-body::-webkit-scrollbar-thumb:hover {
-    background: #81B4C6;
-}
-
-/* Responsive Design */
+/* Responsive design */
 @media (min-width: 1200px) {
     .handbook-image {
         max-width: 60%;
-        max-height: 70vh;
+        max-height: 75vh;
     }
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
     .handbook-image {
         max-width: 85%;
-        max-height: 70vh;
+        max-height: 85vh;
     }
 }
 
 @media (max-width: 768px) {
-    html, body {
-        height: 100vh;
-        height: 100dvh; /* Use dynamic viewport height */
-    }
-    
-    .header {
-        padding: 12px 15px;
-    }
-    
-    .header h1 {
-        font-size: 20px;
-        margin-bottom: 6px;
-    }
-    
-    .header h2 {
-        font-size: 18px;
-        margin-bottom: 6px;
-    }
-    
-    .header h3 {
-        font-size: 15px;
-    }
-    
     .control-bar {
         padding: 10px 15px;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: 15px;
     }
     
     .nav-controls {
@@ -543,62 +467,58 @@ html, body {
     
     .handbook-image {
         max-width: 90%;
-        max-height: 60vh;
-        max-height: 60dvh;
+        max-height: 90vh;
     }
     
-    .bottom-bar {
-        padding: 10px 15px;
-    }
-    
-    #pageInfo {
-        font-size: 15px;
+    /* HOME BUTTON - TABLET */
+    .home-button {
+        padding: 8px 14px;
+        font-size: 13px;
     }
 }
 
 @media (max-width: 480px) {
-    html, body {
-        height: 100vh;
-        height: 100dvh;
-    }
-    
     .header {
-        padding: 8px 12px;
+        padding: 10px 15px;
     }
     
     .header h1 {
-        font-size: 17px;
-        margin-bottom: 5px;
+        font-size: 18px;
     }
     
     .header h2 {
-        font-size: 15px;
-        margin-bottom: 5px;
+        font-size: 16px;
     }
     
     .header h3 {
-        font-size: 13px;
+        font-size: 14px;
     }
     
     .control-bar {
         padding: 8px 10px;
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
         align-items: stretch;
     }
     
     .button-row {
         display: flex;
         width: 100%;
-        gap: 8px;
+        gap: 10px;
         order: 1;
     }
     
     .button-row button,
     .toc-button {
-        height: 44px;
-        padding: 10px 16px;
-        font-size: 13px;
+        height: 46px;
+        padding: 12px 18px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
         flex: 1;
     }
     
@@ -607,40 +527,39 @@ html, body {
         min-width: auto;
     }
     
-    .nav-controls,
+    .nav-controls {
+        display: none !important;
+    }
+    
     #prevBtn,
     #nextBtn {
         display: none !important;
     }
     
+    /* BOTTOM BAR - MOBILE */
     .bottom-bar {
-        padding: 8px 12px;
-        /* Extra insurance for mobile */
-        position: relative;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        padding: 10px 15px;
+        gap: 12px; /* ← SMALLER GAP ON MOBILE */
     }
     
     #pageInfo {
-        font-size: 14px;
+        font-size: 15px;
     }
     
+    /* HOME BUTTON - MOBILE */
     .home-button {
         padding: 8px 14px;
         font-size: 13px;
     }
     
     .handbook-image {
-        max-width: 92%;
-        max-height: 55vh;
-        max-height: 55dvh;
+        max-width: 95%;
+        max-height: 95vh;
     }
     
     .toc-modal-content {
         width: 95%;
         max-height: 90vh;
-        max-height: 90dvh;
         margin: 20px;
     }
     
@@ -663,42 +582,63 @@ html, body {
     }
 }
 
-/* Extra tall phones (20:9 aspect ratio and similar) */
-@media (max-width: 480px) and (min-height: 800px) {
-    .header {
-        padding: 10px 12px;
-    }
-    
-    .header h1 {
-        font-size: 18px;
-        margin-bottom: 6px;
-    }
-    
-    .header h2 {
-        font-size: 16px;
-        margin-bottom: 6px;
-    }
-    
-    .header h3 {
-        font-size: 14px;
-    }
-    
-    .handbook-image {
-        max-width: 90%;
-        max-height: 60vh;
-        max-height: 60dvh;
-    }
-    
-    .bottom-bar {
-        padding: 10px 15px;
-    }
-    
-    #pageInfo {
-        font-size: 15px;
-    }
-    
-    .home-button {
-        padding: 9px 16px;
-        font-size: 14px;
-    }
+/* Disable text selection and image dragging */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+/* Custom scrollbar for zoomed view */
+#viewer-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+#viewer-container::-webkit-scrollbar-track {
+    background: #81B4C6;
+}
+
+#viewer-container::-webkit-scrollbar-thumb {
+    background: #6688C3;
+    border-radius: 6px;
+}
+
+#viewer-container::-webkit-scrollbar-thumb:hover {
+    background: #5577B2;
+}
+
+/* Custom scrollbar for modal */
+.toc-modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.toc-modal-body::-webkit-scrollbar-track {
+    background: #F3F8FB;
+}
+
+.toc-modal-body::-webkit-scrollbar-thumb {
+    background: #9BB5CC;
+    border-radius: 4px;
+}
+
+.toc-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #81B4C6;
+}
+
+/* Smooth transition styles for page changes */
+#image-wrapper {
+    will-change: transform;
+}
+
+.handbook-image {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
