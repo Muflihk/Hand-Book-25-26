@@ -23,7 +23,7 @@ let swipeTimeThreshold = 300;
 const tableOfContents = [
     // Front pages (Roman numerals)
     { title: "Cover", page: "i", isMajor: false },
-  
+    { title: "--", page: "ii", isMajor: false },
     { title: "College Prayer", page: "iii", isMajor: false },
     { title: "Student Profile", page: "iv", isMajor: false },
     { title: "Pledge", page: "v", isMajor: false },
@@ -733,4 +733,3 @@ window.addEventListener('resize', function() {
         }
     }, 100);
 });
-
