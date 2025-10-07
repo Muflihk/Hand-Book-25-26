@@ -1,11 +1,11 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Simple Image Viewer CSS with Blue Theme */
+/* Base Styles */
 html, body {
     margin: 0;
     padding: 0;
-    background: #306e8d; /* Dark blue background */
+    background: #306e8d;
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
     width: 100vw;
@@ -17,11 +17,11 @@ html, body {
 
 /* Header Section */
 .header {
-    background: #306e8d; /* Darker blue for header */
+    background: #306e8d;
     color: white;
     text-align: center;
     padding: 15px 20px;
-    border-bottom: 2px solid #6688C3; /* Light blue border */
+    border-bottom: 2px solid #6688C3;
 }
 
 .header h1 {
@@ -30,7 +30,6 @@ html, body {
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.5px;
-    color: white;
 }
 
 .header h2 {
@@ -39,7 +38,6 @@ html, body {
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
     letter-spacing: 0.3px;
-    color: white;
 }
 
 .header h3 {
@@ -48,12 +46,11 @@ html, body {
     font-weight: 500;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.2px;
-    color: white;
 }
 
-/* Control bar */
+/* Control Bar */
 .control-bar {
-    background: #264574; /* Light blue for control bar */
+    background: #264574;
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -75,9 +72,8 @@ html, body {
     display: contents;
 }
 
-/* Table of Contents Button */
 .toc-button {
-    background: #a2abbb; /* Medium blue for TOC button */
+    background: #a2abbb;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -96,10 +92,10 @@ html, body {
 }
 
 .toc-button:hover {
-    background: #5577B2; /* Darker blue on hover */
+    background: #5577B2;
 }
 
-/* TOC Modal Styles */
+/* TOC Modal */
 .toc-modal {
     display: none;
     position: fixed;
@@ -135,14 +131,14 @@ html, body {
     justify-content: space-between;
     align-items: center;
     padding: 20px 25px;
-    border-bottom: 2px solid #B8D4E3; /* Light blue border */
-    background: #E9F4F8; /* Very light blue background */
+    border-bottom: 2px solid #B8D4E3;
+    background: #E9F4F8;
     border-radius: 12px 12px 0 0;
 }
 
 .toc-modal-header h3 {
     margin: 0;
-    color: #0F3A4D; /* Dark blue text */
+    color: #0F3A4D;
     font-family: 'Poppins', sans-serif;
     font-size: 20px;
     font-weight: 600;
@@ -153,7 +149,7 @@ html, body {
     border: none;
     font-size: 28px;
     cursor: pointer;
-    color: #0F3A4D; /* Dark blue */
+    color: #0F3A4D;
     padding: 0;
     width: 35px;
     height: 35px;
@@ -176,11 +172,11 @@ html, body {
     scroll-behavior: smooth;
 }
 
-/* TOC Items in Modal */
+/* TOC Items */
 .toc-item {
     padding: 16px 25px;
     cursor: pointer;
-    border-bottom: 1px solid #E9F4F8; /* Very light blue border */
+    border-bottom: 1px solid #E9F4F8;
     color: #333;
     font-family: 'Inter', sans-serif;
     font-size: 15px;
@@ -192,8 +188,8 @@ html, body {
 }
 
 .toc-item:hover {
-    background: #B8D4E3; /* Light blue on hover */
-    color: #0F3A4D; /* Dark blue text */
+    background: #B8D4E3;
+    color: #0F3A4D;
 }
 
 .toc-item:last-child {
@@ -201,32 +197,32 @@ html, body {
 }
 
 .toc-item.current {
-    background: #81B4C6; /* Medium light blue for current item */
-    color: #0F3A4D; /* Dark blue text */
+    background: #81B4C6;
+    color: #0F3A4D;
     font-weight: 600;
-    border-left: 4px solid #6688C3; /* Blue accent */
+    border-left: 4px solid #6688C3;
 }
 
 .toc-item.major-section {
     font-weight: 600;
     font-size: 16px;
-    color: #0F3A4D; /* Dark blue text */
-    background-color: #F3F8FB; /* Very light blue background */
+    color: #0F3A4D;
+    background-color: #F3F8FB;
     letter-spacing: 0.2px;
     padding: 18px 25px;
 }
 
 .toc-item.major-section:hover {
-    background-color: #E9F4F8; /* Light blue on hover */
+    background-color: #E9F4F8;
 }
 
 .toc-item.major-section.current {
-    background: #6688C3; /* Blue for current major section */
+    background: #6688C3;
     color: white;
     font-weight: 700;
 }
 
-/* Animation keyframes */
+/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -243,8 +239,9 @@ html, body {
     }
 }
 
+/* Control Buttons */
 .control-bar button {
-    background: #1d2e4b; /* Blue for other buttons */
+    background: #1d2e4b;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -258,21 +255,21 @@ html, body {
 }
 
 .control-bar button:hover {
-    background: #5577B2; /* Darker blue on hover */
+    background: #5577B2;
 }
 
 .control-bar button:disabled {
-    background: #1d2e4b; /* Light blue for disabled */
+    background: #1d2e4b;
     cursor: not-allowed;
     opacity: 0.5;
 }
 
-/* Viewer container */
+/* Viewer Container */
 #viewer-container {
     flex: 1;
     position: relative;
     overflow: hidden;
-    background: #1B5471; /* Dark blue background for viewer */
+    background: #1B5471;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -288,8 +285,10 @@ html, body {
     transition: transform 0.3s ease;
     transform-origin: center center;
     overflow: hidden;
+    will-change: transform;
 }
 
+/* Handbook Images */
 .handbook-image {
     position: absolute;
     top: 50%;
@@ -307,6 +306,9 @@ html, body {
     cursor: grab;
     transition: transform 0.35s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.3s ease;
     opacity: 0;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .handbook-image.active {
@@ -321,6 +323,7 @@ html, body {
     cursor: grabbing;
 }
 
+/* Loading & Error States */
 .loading {
     position: absolute;
     top: 50%;
@@ -328,7 +331,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     font-size: 18px;
-    background: rgba(15, 58, 77, 0.9); /* Dark blue background */
+    background: rgba(15, 58, 77, 0.9);
     padding: 20px;
     border-radius: 8px;
     display: none;
@@ -347,7 +350,7 @@ html, body {
     transform: translate(-50%, -50%);
     color: white;
     text-align: center;
-    background: rgba(198, 40, 40, 0.9); /* Keep red for errors */
+    background: rgba(198, 40, 40, 0.9);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
@@ -356,7 +359,6 @@ html, body {
 
 .error h3 {
     margin: 0 0 10px 0;
-    color: white;
 }
 
 .error p {
@@ -365,11 +367,11 @@ html, body {
 }
 
 @keyframes pulse {
-    0% { opacity: 0.6; }
+    0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
-    100% { opacity: 0.6; }
 }
 
+/* Zoomed State */
 .zoomed #viewer-container {
     overflow: auto;
 }
@@ -382,8 +384,9 @@ html, body {
     cursor: grabbing;
 }
 
+/* Bottom Bar */
 .bottom-bar {
-    background: #2f4a53; /* Light blue for bottom bar */
+    background: #2f4a53;
     color: white;
     padding: 12px 20px;
     display: flex;
@@ -397,16 +400,14 @@ html, body {
 
 #pageInfo {
     font-weight: 600;
-    color: #fff;
     font-size: 17px;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.3px;
-    text-align: center;
 }
 
 /* Home Button */
 .home-button {
-    background: #1d2e4b; /* Blue for home button */
+    background: #1d2e4b;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -424,10 +425,53 @@ html, body {
 }
 
 .home-button:hover {
-    background: #5577B2; /* Darker blue on hover */
+    background: #5577B2;
 }
 
-/* Responsive design */
+/* Disable Selection & Dragging */
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+/* Custom Scrollbars */
+#viewer-container::-webkit-scrollbar,
+.toc-modal-body::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+#viewer-container::-webkit-scrollbar-track {
+    background: #81B4C6;
+}
+
+#viewer-container::-webkit-scrollbar-thumb {
+    background: #6688C3;
+    border-radius: 6px;
+}
+
+#viewer-container::-webkit-scrollbar-thumb:hover {
+    background: #5577B2;
+}
+
+.toc-modal-body::-webkit-scrollbar-track {
+    background: #F3F8FB;
+}
+
+.toc-modal-body::-webkit-scrollbar-thumb {
+    background: #9BB5CC;
+    border-radius: 4px;
+}
+
+.toc-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #81B4C6;
+}
+
+/* Responsive Design */
 @media (min-width: 1200px) {
     .handbook-image {
         max-width: 60%;
@@ -506,12 +550,6 @@ html, body {
         height: 46px;
         padding: 12px 18px;
         font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 0.2px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
         flex: 1;
     }
     
@@ -520,10 +558,7 @@ html, body {
         min-width: auto;
     }
     
-    .nav-controls {
-        display: none !important;
-    }
-    
+    .nav-controls,
     #prevBtn,
     #nextBtn {
         display: none !important;
@@ -570,65 +605,4 @@ html, body {
         padding: 16px 20px;
         font-size: 15px;
     }
-}
-
-/* Disable text selection and image dragging */
-* {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
-}
-
-/* Custom scrollbar for zoomed view */
-#viewer-container::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-}
-
-#viewer-container::-webkit-scrollbar-track {
-    background: #81B4C6; /* Light blue scrollbar track */
-}
-
-#viewer-container::-webkit-scrollbar-thumb {
-    background: #6688C3; /* Blue scrollbar thumb */
-    border-radius: 6px;
-}
-
-#viewer-container::-webkit-scrollbar-thumb:hover {
-    background: #5577B2; /* Darker blue on hover */
-}
-
-/* Custom scrollbar for modal */
-.toc-modal-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-.toc-modal-body::-webkit-scrollbar-track {
-    background: #F3F8FB; /* Very light blue scrollbar track */
-}
-
-.toc-modal-body::-webkit-scrollbar-thumb {
-    background: #9BB5CC; /* Light blue scrollbar thumb */
-    border-radius: 4px;
-}
-
-.toc-modal-body::-webkit-scrollbar-thumb:hover {
-    background: #81B4C6; /* Medium blue on hover */
-}
-
-/* Smooth transition styles for page changes */
-#image-wrapper {
-    will-change: transform;
-}
-
-.handbook-image {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
