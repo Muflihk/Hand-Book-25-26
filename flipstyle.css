@@ -295,7 +295,7 @@ html, body {
     left: 50%;
     transform: translate(-50%, -50%);
     max-width: 70%;
-    max-height: 80vh;
+    max-height: 70vh;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -475,22 +475,40 @@ html, body {
 @media (min-width: 1200px) {
     .handbook-image {
         max-width: 60%;
-        max-height: 75vh;
+        max-height: 70vh;
     }
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {
     .handbook-image {
         max-width: 85%;
-        max-height: 85vh;
+        max-height: 70vh;
     }
 }
 
 @media (max-width: 768px) {
+    .header {
+        padding: 12px 15px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+    
+    .header h2 {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+    
+    .header h3 {
+        font-size: 15px;
+    }
+    
     .control-bar {
         padding: 10px 15px;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 12px;
     }
     
     .nav-controls {
@@ -510,46 +528,56 @@ html, body {
     
     .handbook-image {
         max-width: 90%;
-        max-height: 90vh;
+        max-height: 60vh;
+    }
+    
+    .bottom-bar {
+        padding: 10px 15px;
+    }
+    
+    #pageInfo {
+        font-size: 15px;
     }
 }
 
 @media (max-width: 480px) {
     .header {
-        padding: 10px 15px;
+        padding: 8px 12px;
     }
     
     .header h1 {
-        font-size: 18px;
+        font-size: 17px;
+        margin-bottom: 5px;
     }
     
     .header h2 {
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 5px;
     }
     
     .header h3 {
-        font-size: 14px;
+        font-size: 13px;
     }
     
     .control-bar {
         padding: 8px 10px;
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
         align-items: stretch;
     }
     
     .button-row {
         display: flex;
         width: 100%;
-        gap: 10px;
+        gap: 8px;
         order: 1;
     }
     
     .button-row button,
     .toc-button {
-        height: 46px;
-        padding: 12px 18px;
-        font-size: 14px;
+        height: 44px;
+        padding: 10px 16px;
+        font-size: 13px;
         flex: 1;
     }
     
@@ -565,21 +593,21 @@ html, body {
     }
     
     .bottom-bar {
-        padding: 10px 15px;
+        padding: 8px 12px;
     }
     
     #pageInfo {
-        font-size: 15px;
-    }
-    
-    .home-button {
-        padding: 8px 16px;
         font-size: 14px;
     }
     
+    .home-button {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
     .handbook-image {
-        max-width: 95%;
-        max-height: 95vh;
+        max-width: 92%;
+        max-height: 55vh;
     }
     
     .toc-modal-content {
@@ -604,5 +632,44 @@ html, body {
     .toc-item.major-section {
         padding: 16px 20px;
         font-size: 15px;
+    }
+}
+
+/* Extra tall phones (20:9 aspect ratio and similar) */
+@media (max-width: 480px) and (min-height: 800px) {
+    .header {
+        padding: 10px 12px;
+    }
+    
+    .header h1 {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+    
+    .header h2 {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+    
+    .header h3 {
+        font-size: 14px;
+    }
+    
+    .handbook-image {
+        max-width: 90%;
+        max-height: 60vh;
+    }
+    
+    .bottom-bar {
+        padding: 10px 15px;
+    }
+    
+    #pageInfo {
+        font-size: 15px;
+    }
+    
+    .home-button {
+        padding: 9px 16px;
+        font-size: 14px;
     }
 }
