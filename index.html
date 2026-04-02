@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>HabitLog — Know Your Habits</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#1E4E4E"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="HabitLog"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6D6;
+    --parchment: #E8DFC8;
+    --teal: #2D6E6E;
+    --teal-light: #3D8C8C;
+    --teal-dark: #1E4E4E;
+    --amber: #C8762A;
+    --amber-light: #E8943A;
+    --rose: #C05050;
+    --sage: #5A7A5A;
+    --ink: #2A2420;
+    --ink-light: #5A504A;
+    --ink-muted: #8A7A6A;
+    --white: #FEFCF8;
+    --shadow: rgba(42,36,32,0.12);
+    --shadow-deep: rgba(42,36,32,0.22);
+    --green-continue: #4A8A5A;
+    --yellow-improve: #C8A02A;
+    --red-discontinue: #C05050;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  .screen { display:none; min-height:100vh; flex-direction:column; }
+  .screen.active { display:flex; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes pop { 0%{transform:scale(0.8);opacity:0;} 60%{transform:scale(1.08);} 100%{transform:scale(1);opacity:1;} }
+  @keyframes shimmer { 0%,100%{opacity:0.7;} 50%{opacity:1;} }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity:1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity:0; }
+  }
+  @keyframes slideIn { from{transform:translateX(100%);} to{transform:translateX(0);} }
+  @keyframes slideOut { from{transform:translateX(0);} to{transform:translateX(-100%);} }
+
+  /* ══════════════════════════════════
+     SCREEN 1: ONBOARDING
+  ══════════════════════════════════ */
+  #screen-onboard {
+    background: var(--teal-dark);
+    justify-content: center;
+    align-items: center;
+    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #screen-onboard::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,118,42,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  #screen-onboard::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(45,110,110,0.5) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .onboard-card {
+    background: var(--cream);
+    border-radius: 28px;
+    padding: 36px 28px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 1;
+    animation: pop 0.6s ease forwards;
+  }
+
+  .onboard-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .onboard-logo .logo-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 10px;
+    animation: shimmer 2s infinite;
+  }
+
+  .onboard-logo h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .onboard-logo p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .onboard-section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .avatar-option {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream-dark);
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .avatar-option:hover { transform: scale(1.1); background: var(--parchment); }
+  .avatar-option.selected {
+    border-color: var(--teal);
+    background: var(--teal);
+    box-shadow: 0 4px 16px rgba(45,110,110,0.4);
+    transform: scale(1.12);
+  }
+
+  .name-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--parchment);
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 20px;
+  }
+
+  .name-input:focus { border-color: var(--teal); }
+  .name-input::placeholder { color: var(--ink-muted); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(45,110,110,0.35); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { background: var(--ink-muted); cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .error-msg { color: var(--rose); font-size: 13px; margin-bottom: 12px; display: none; }
+
+  /* ══════════════════════════════════
+     MAIN APP SHELL
+  ══════════════════════════════════ */
+  #screen-app {
+    background: var(--cream);
+    flex-direction: column;
+    position: relative;
+  }
+
+  .app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 430px;
+    background: var(--white);
+    border-top: 1.5px solid var(--parchment);
+    display: flex;
+    z-index: 100;
+    box-shadow: 0 -4px 20px var(--shadow);
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0 8px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--ink-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    gap: 3px;
+    transition: color 0.2s;
+  }
+
+  .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+  .nav-btn.active { color: var(--teal); }
+  .nav-btn.active .nav-icon { filter: drop-shadow(0 2px 4px rgba(45,110,110,0.3)); }
+
+  /* Tab panels */
+  .tab-panel { display: none; padding: 0; }
+  .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
+
+  /* ══════════════════════════════════
+     TAB: DASHBOARD / HOME
+  ══════════════════════════════════ */
+  .dash-header {
+    background: var(--teal-dark);
+    padding: 52px 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dash-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: -30px;
+    width: 160px; height: 160px;
+    background: rgba(200,118,42,0.15);
+    border-radius: 50%;
+  }
+
+  .dash-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .user-info { display: flex; align-items: center; gap: 12px; }
+
+  .user-avatar-sm {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--amber);
+    font-size: 24px;
+    display: flex; align-items: center; justify-content: center;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .user-greeting { color: rgba(255,255,255,0.7); font-size: 12px; }
+  .user-name { color: white; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+
+  .date-badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 12px;
+    color: rgba(255,255,255,0.8);
+    font-size: 12px;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-icon { font-size: 20px; margin-bottom: 4px; }
+  .stat-value { color: white; font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; line-height: 1; }
+  .stat-label { color: rgba(255,255,255,0.6); font-size: 10px; margin-top: 3px; letter-spacing: 0.5px; }
+
+  .dash-body { padding: 20px 20px 0; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .section-count { font-size: 12px; color: var(--ink-muted); }
+
+  /* Habit Cards */
+  .habit-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .habit-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 14px 16px;
+    border-left: 4px solid var(--green-continue);
+    box-shadow: 0 2px 10px var(--shadow);
+    animation: fadeUp 0.3s ease both;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .habit-card:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--shadow); }
+  .habit-card.improve { border-left-color: var(--yellow-improve); }
+  .habit-card.discontinue { border-left-color: var(--red-discontinue); }
+
+  .habit-card-emoji { font-size: 28px; flex-shrink: 0; }
+
+  .habit-card-info { flex: 1; min-width: 0; }
+  .habit-card-name { font-weight: 600; font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .habit-card-meta { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+
+  .habit-card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+  .badge-continue { background: #E8F5EC; color: var(--green-continue); }
+  .badge-improve { background: #FFF8E0; color: var(--yellow-improve); }
+  .badge-discontinue { background: #FDE8E8; color: var(--red-discontinue); }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--ink-muted);
+  }
+
+  .empty-state .empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.6; }
+  .empty-state p { font-size: 15px; line-height: 1.6; }
+
+  /* FAB */
+  .fab {
+    position: fixed;
+    bottom: 88px;
+    right: calc(50% - 215px + 20px);
+    width: 56px; height: 56px;
+    background: var(--amber);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(200,118,42,0.45);
+    transition: all 0.2s;
+    z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  .fab:hover { transform: scale(1.08); box-shadow: 0 8px 28px rgba(200,118,42,0.55); }
+  .fab:active { transform: scale(0.95); }
+  .fab.disabled { background: var(--ink-muted); box-shadow: none; cursor: not-allowed; }
+
+  .limit-banner {
+    background: #FDE8E8;
+    border: 1px solid #F5C0C0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--rose);
+    text-align: center;
+    margin: 12px 20px 0;
+    display: none;
+  }
+
+  /* ══════════════════════════════════
+     TAB: LOG ENTRY (WIZARD)
+  ══════════════════════════════════ */
+  .wizard-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,78,78,0.85);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    backdrop-filter: blur(4px);
+  }
+
+  .wizard-overlay.open { display: flex; }
+
+  .wizard-sheet {
+    background: var(--cream);
+    border-radius: 28px 28px 0 0;
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 0 0 32px;
+    max-height: 92vh;
+    overflow-y: auto;
+    animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .wizard-handle {
+    width: 40px; height: 4px;
+    background: var(--parchment);
+    border-radius: 2px;
+    margin: 14px auto 20px;
+  }
+
+  .wizard-header {
+    padding: 0 24px 20px;
+    border-bottom: 1.5px solid var(--cream-dark);
+  }
+
+  .wizard-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .progress-bar-track {
+    background: var(--parchment);
+    border-radius: 4px;
+    height: 6px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal-light));
+    border-radius: 4px;
+    transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .step-label { font-size: 11px; color: var(--ink-muted); margin-top: 6px; }
+
+  .wizard-body { padding: 24px 24px 0; }
+
+  .step-pane { display: none; animation: fadeUp 0.3s ease; }
+  .step-pane.active { display: block; }
+
+  .step-question {
+    font-family: 'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  /* Choice Cards */
+  .choice-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .choice-grid.row { flex-direction: row; }
+
+  .choice-card {
+    background: var(--white);
+    border: 2.5px solid var(--parchment);
+    border-radius: 16px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+  }
+
+  .choice-card:hover { border-color: var(--teal-light); background: var(--cream-dark); }
+
+  .choice-card.selected {
+    border-color: var(--teal);
+    background: rgba(45,110,110,0.06);
+    box-shadow: 0 4px 16px rgba(45,110,110,0.15);
+  }
+
+  .choice-emoji { font-size: 28px; flex-shrink: 0; }
+  .choice-label { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .choice-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+  /* Time inputs */
+  .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+  .time-field label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-muted); margin-bottom: 6px; letter-spacing: 0.5px; }
+
+  .time-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--parchment);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .time-input:focus { border-color: var(--teal); }
+
+  .toggle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+
+  .toggle-card {
+    padding: 14px;
+    border-radius: 14px;
+    border: 2.5px solid var(--parchment);
+    background: var(--white);
+    cursor: pointer;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: var(--ink-light);
+  }
+
+  .toggle-card:hover { border-color: var(--teal-light); }
+  .toggle-card.selected { border-color: var(--teal); background: rgba(45,110,110,0.06); color: var(--teal-dark); }
+  .toggle-card .t-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  /* Name input in wizard */
+  .wizard-input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 2.5px solid var(--parchment);
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    background: var(--white);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 24px;
+  }
+
+  .wizard-input:focus { border-color: var(--teal); }
+  .wizard-input::placeholder { color: var(--ink-muted); }
+
+  /* Wizard Footer */
+  .wizard-footer {
+    padding: 0 24px;
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .btn-back {
+    padding: 14px 20px;
+    background: var(--parchment);
+    color: var(--ink-light);
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-back:hover { background: var(--cream-dark); }
+
+  .btn-next {
+    flex: 1;
+    padding: 14px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-next:hover { background: var(--teal-light); }
+  .btn-next:disabled { background: var(--ink-muted); cursor: not-allowed; }
+  .btn-save { background: var(--amber); }
+  .btn-save:hover { background: var(--amber-light); }
+
+  /* ══════════════════════════════════
+     TAB: PROGRESS
+  ══════════════════════════════════ */
+  .progress-header {
+    background: var(--teal-dark);
+    padding: 52px 24px 28px;
+  }
+
+  .progress-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .progress-header p { color: rgba(255,255,255,0.6); font-size: 13px; }
+
+  .progress-body { padding: 20px; }
+
+  .chart-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .chart-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; }
+  .bar { width: 100%; border-radius: 6px 6px 0 0; background: var(--teal); min-height: 4px; transition: height 0.5s; }
+  .bar-label { font-size: 10px; color: var(--ink-muted); }
+
+  /* Donut chart */
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-svg { flex-shrink: 0; }
+  .donut-legend { flex: 1; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { font-size: 12px; color: var(--ink-light); }
+  .legend-val { font-size: 12px; font-weight: 700; color: var(--ink); margin-left: auto; }
+
+  /* Habits health */
+  .health-list { display: flex; flex-direction: column; gap: 10px; }
+  .health-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--cream); border-radius: 12px; }
+  .health-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--ink); }
+  .health-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 10px; }
+
+  /* ══════════════════════════════════
+     TAB: HISTORY
+  ══════════════════════════════════ */
+  .history-header {
+    background: var(--teal-dark);
+    padding: 52px 24px 28px;
+  }
+
+  .history-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .history-header p { color: rgba(255,255,255,0.6); font-size: 13px; }
+
+  .calendar-strip {
+    display: flex;
+    gap: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    background: var(--white);
+    border-bottom: 1.5px solid var(--parchment);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .calendar-strip::-webkit-scrollbar { display: none; }
+
+  .cal-day {
+    flex-shrink: 0;
+    width: 48px;
+    padding: 8px 4px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .cal-day .day-name { font-size: 10px; color: var(--ink-muted); margin-bottom: 4px; }
+  .cal-day .day-num { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; color: var(--ink); }
+  .cal-day .day-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); margin: 4px auto 0; visibility: hidden; }
+  .cal-day.has-data .day-dot { visibility: visible; }
+  .cal-day.selected { background: var(--teal); border-color: var(--teal); }
+  .cal-day.selected .day-name, .cal-day.selected .day-num { color: white; }
+  .cal-day.selected .day-dot { background: white; }
+  .cal-day:hover:not(.selected) { background: var(--cream-dark); }
+
+  .history-body { padding: 16px 20px; }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--parchment);
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-chip.active { background: var(--teal); border-color: var(--teal); color: white; }
+
+  .history-entry {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px var(--shadow);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .history-entry:hover { transform: translateY(-1px); }
+
+  .history-entry-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .history-entry-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .history-entry-time { font-size: 11px; color: var(--ink-muted); }
+
+  .history-entry-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .mini-chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+
+  .chip-motive { background: #E8F0FF; color: #3050A0; }
+  .chip-emotion { background: #FFF0E8; color: #A05030; }
+  .chip-outcome { background: #F0F8E8; color: #507030; }
+  .chip-final { background: #F8F0FF; color: #7030A0; }
+
+  .entry-detail {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1.5px dashed var(--parchment);
+    font-size: 12px;
+    color: var(--ink-light);
+    line-height: 1.8;
+  }
+
+  .entry-detail.open { display: block; }
+
+  .detail-row { display: flex; justify-content: space-between; }
+  .detail-key { color: var(--ink-muted); }
+  .detail-val { font-weight: 600; color: var(--ink); }
+
+  /* ══════════════════════════════════
+     TAB: PROFILE
+  ══════════════════════════════════ */
+  .profile-header {
+    background: var(--teal-dark);
+    padding: 52px 24px 48px;
+    text-align: center;
+    position: relative;
+  }
+
+  .profile-avatar-lg {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: var(--amber);
+    font-size: 48px;
+    display: flex; align-items: center; justify-content: center;
+    border: 4px solid rgba(255,255,255,0.3);
+    margin: 0 auto 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  .profile-name {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .profile-since { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  .profile-body { padding: 20px; }
+
+  .profile-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .profile-stat {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .profile-stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--teal-dark);
+  }
+
+  .profile-stat-label { font-size: 12px; color: var(--ink-muted); margin-top: 4px; }
+
+  .profile-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  .profile-action-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: 2px solid var(--parchment);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--ink);
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-action-btn:hover { background: var(--cream-dark); border-color: var(--cream-dark); }
+  .profile-action-btn.danger { color: var(--rose); border-color: #F5C0C0; }
+  .profile-action-btn.danger:hover { background: #FDE8E8; }
+
+  .version-note { text-align: center; color: var(--ink-muted); font-size: 12px; margin-top: 24px; }
+
+  /* ══════════════════════════════════
+     CONFETTI
+  ══════════════════════════════════ */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9998;
+    animation: confettiFall linear forwards;
+  }
+
+  /* ══════════════════════════════════
+     SUCCESS TOAST
+  ══════════════════════════════════ */
+  .toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: var(--teal-dark);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 9997;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 0; background: transparent; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     SCREEN 1: ONBOARDING
+════════════════════════════ -->
+<div id="screen-onboard" class="screen active">
+  <div class="onboard-card">
+    <div class="onboard-logo">
+      <span class="logo-icon">📓</span>
+      <h1>HabitLog</h1>
+      <p>Know your habits. Know yourself.</p>
+    </div>
+
+    <p class="onboard-section-label">Choose your avatar</p>
+    <div class="avatar-grid" id="avatarGrid">
+      <div class="avatar-option" data-avatar="🧑" onclick="selectAvatar(this)">🧑</div>
+      <div class="avatar-option" data-avatar="👦" onclick="selectAvatar(this)">👦</div>
+      <div class="avatar-option" data-avatar="👧" onclick="selectAvatar(this)">👧</div>
+      <div class="avatar-option" data-avatar="👨" onclick="selectAvatar(this)">👨</div>
+      <div class="avatar-option" data-avatar="👩" onclick="selectAvatar(this)">👩</div>
+      <div class="avatar-option" data-avatar="🧔" onclick="selectAvatar(this)">🧔</div>
+      <div class="avatar-option" data-avatar="👱" onclick="selectAvatar(this)">👱</div>
+      <div class="avatar-option" data-avatar="🧕" onclick="selectAvatar(this)">🧕</div>
+      <div class="avatar-option" data-avatar="👲" onclick="selectAvatar(this)">👲</div>
+      <div class="avatar-option" data-avatar="🧓" onclick="selectAvatar(this)">🧓</div>
+    </div>
+
+    <p class="onboard-section-label">What's your name?</p>
+    <div class="error-msg" id="onboardError">Please choose an avatar and enter your name.</div>
+    <input class="name-input" id="nameInput" type="text" placeholder="Enter your name…" maxlength="24" autocomplete="off" autocorrect="off"/>
+    <button class="btn-primary" onclick="completeOnboarding()">Start Tracking →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     SCREEN 2: MAIN APP
+════════════════════════════ -->
+<div id="screen-app" class="screen">
+  <div class="app-content">
+
+    <!-- TAB: HOME -->
+    <div class="tab-panel active" id="tab-home">
+      <div class="dash-header">
+        <div class="dash-top-row">
+          <div class="user-info">
+            <div class="user-avatar-sm" id="dashAvatar">🦊</div>
+            <div>
+              <div class="user-greeting">Good day,</div>
+              <div class="user-name" id="dashName">Friend</div>
+            </div>
+          </div>
+          <div class="date-badge" id="dashDate"></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">🔥</div>
+            <div class="stat-value" id="statStreak">0</div>
+            <div class="stat-label">Day Streak</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value" id="statToday">0/30</div>
+            <div class="stat-label">Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">Total Logged</div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div class="limit-banner" id="limitBanner">🚫 Daily limit of 30 habits reached!</div>
+        <div class="section-header">
+          <div class="section-title">Today's Habits</div>
+          <div class="section-count" id="todayCount"></div>
+        </div>
+        <div class="habit-list" id="habitList">
+          <div class="empty-state">
+            <div class="empty-icon">🌱</div>
+            <p>No habits logged yet today.<br/>Tap the <strong>+</strong> button to begin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PROGRESS -->
+    <div class="tab-panel" id="tab-progress">
+      <div class="progress-header">
+        <h2>Progress</h2>
+        <p>Your habit patterns at a glance</p>
+      </div>
+      <div class="progress-body" id="progressBody">
+        <div class="empty-state" style="padding:60px 20px;">
+          <div class="empty-icon">📈</div>
+          <p>Log some habits to see<br/>your progress here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: HISTORY -->
+    <div class="tab-panel" id="tab-history">
+      <div class="history-header">
+        <h2>History</h2>
+        <p>Browse your past entries</p>
+      </div>
+      <div class="calendar-strip" id="calendarStrip"></div>
+      <div class="history-body">
+        <div class="filter-row" id="filterRow">
+          <div class="filter-chip active" data-filter="all" onclick="setFilter(this,'all')">All</div>
+          <div class="filter-chip" data-filter="continue" onclick="setFilter(this,'continue')">✅ Continue</div>
+          <div class="filter-chip" data-filter="improve" onclick="setFilter(this,'improve')">✏️ Improve</div>
+          <div class="filter-chip" data-filter="discontinue" onclick="setFilter(this,'discontinue')">🚫 Discontinue</div>
+          <div class="filter-chip" data-filter="pleasure" onclick="setFilter(this,'pleasure')">🍭 Pleasure</div>
+          <div class="filter-chip" data-filter="pressure" onclick="setFilter(this,'pressure')">⚡ Pressure</div>
+          <div class="filter-chip" data-filter="goal" onclick="setFilter(this,'goal')">🎯 Goal</div>
+        </div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: PROFILE -->
+    <div class="tab-panel" id="tab-profile">
+      <div class="profile-header">
+        <div class="profile-avatar-lg" id="profileAvatarLg">🦊</div>
+        <div class="profile-name" id="profileName">Friend</div>
+        <div class="profile-since" id="profileSince"></div>
+      </div>
+      <div class="profile-body">
+        <div class="profile-stat-row">
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="profileTotal">0</div>
+            <div class="profile-stat-label">Total Habits</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="profileDays">0</div>
+            <div class="profile-stat-label">Days Tracked</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="profileStreak">0</div>
+            <div class="profile-stat-label">Best Streak</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="profileContinue">0%</div>
+            <div class="profile-stat-label">Continue Rate</div>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="profile-action-btn" onclick="editName()">✏️ &nbsp; Edit Name</button>
+          <button class="profile-action-btn danger" onclick="resetApp()">🗑️ &nbsp; Reset All Data</button>
+        </div>
+        <div class="version-note">HabitLog v1.0 — Development Build<br/>sr-science.com</div>
+      </div>
+    </div>
+
+  </div><!-- end app-content -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('home',this)">
+      <span class="nav-icon">🏠</span>Home
+    </button>
+    <button class="nav-btn" onclick="switchTab('progress',this)">
+      <span class="nav-icon">📊</span>Progress
+    </button>
+    <button class="nav-btn" onclick="switchTab('history',this)">
+      <span class="nav-icon">📋</span>History
+    </button>
+    <button class="nav-btn" onclick="switchTab('profile',this)">
+      <span class="nav-icon">👤</span>Profile
+    </button>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab" id="fabBtn" onclick="openWizard()">+</button>
+</div><!-- end screen-app -->
+
+<!-- ════════════════════════════
+     LOG ENTRY WIZARD
+════════════════════════════ -->
+<div class="wizard-overlay" id="wizardOverlay" onclick="handleOverlayClick(event)">
+  <div class="wizard-sheet" id="wizardSheet">
+    <div class="wizard-handle"></div>
+
+    <div class="wizard-header">
+      <div class="wizard-title" id="wizardStepTitle">Log a Habit</div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="wizardProgress" style="width:16.6%"></div>
+      </div>
+      <div class="step-label" id="wizardStepLabel">Step 1 of 6</div>
+    </div>
+
+    <div class="wizard-body">
+
+      <!-- Step 1: Activity Name -->
+      <div class="step-pane active" id="step1">
+        <div class="step-question">What activity did you do?</div>
+        <input class="wizard-input" id="activityInput" type="text" placeholder="e.g. Morning run, Reading…" maxlength="60" autocomplete="off" oninput="validateStep()"/>
+      </div>
+
+      <!-- Step 2: Motive -->
+      <div class="step-pane" id="step2">
+        <div class="step-question">What was your motive?</div>
+        <div class="choice-grid" id="motiveCards">
+          <div class="choice-card" data-val="pleasure" onclick="selectChoice('motive',this)">
+            <span class="choice-emoji">🍭</span>
+            <div><div class="choice-label">Instant Pleasure</div><div class="choice-sub">Did it because it felt good</div></div>
+          </div>
+          <div class="choice-card" data-val="pressure" onclick="selectChoice('motive',this)">
+            <span class="choice-emoji">⚡</span>
+            <div><div class="choice-label">Pressure / Compulsion</div><div class="choice-sub">Felt forced or obligated</div></div>
+          </div>
+          <div class="choice-card" data-val="goal" onclick="selectChoice('motive',this)">
+            <span class="choice-emoji">🎯</span>
+            <div><div class="choice-label">Future Goal</div><div class="choice-sub">Working toward something bigger</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Time -->
+      <div class="step-pane" id="step3">
+        <div class="step-question">When did you do it?</div>
+        <div class="time-row">
+          <div class="time-field">
+            <label>START TIME</label>
+            <input class="time-input" id="startTime" type="time" oninput="validateStep()"/>
+          </div>
+          <div class="time-field">
+            <label>END TIME</label>
+            <input class="time-input" id="endTime" type="time" oninput="validateStep()"/>
+          </div>
+        </div>
+        <p class="onboard-section-label" style="margin-bottom:10px;">Was the timing right?</p>
+        <div class="toggle-row" id="timingCards">
+          <div class="toggle-card" data-val="right" onclick="selectToggle('timing',this)">
+            <span class="t-icon">✅</span>Right Time
+          </div>
+          <div class="toggle-card" data-val="wrong" onclick="selectToggle('timing',this)">
+            <span class="t-icon">⏰</span>Wrong Time
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Manner -->
+      <div class="step-pane" id="step4">
+        <div class="step-question">How did you approach it?</div>
+        <div class="choice-grid" id="mannerCards">
+          <div class="choice-card" data-val="focused" onclick="selectChoice('manner',this)">
+            <span class="choice-emoji">🎯</span>
+            <div><div class="choice-label">Focused & Disciplined</div><div class="choice-sub">Fully present, no distractions</div></div>
+          </div>
+          <div class="choice-card" data-val="distracted" onclick="selectChoice('manner',this)">
+            <span class="choice-emoji">🌀</span>
+            <div><div class="choice-label">Distracted & Undisciplined</div><div class="choice-sub">Mind wandered, lost focus</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Emotional Outcome -->
+      <div class="step-pane" id="step5">
+        <div class="step-question">How did it make you feel?</div>
+        <div class="choice-grid row" id="emotionCards">
+          <div class="choice-card" data-val="happy" onclick="selectChoice('emotion',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">😊</span>
+            <div><div class="choice-label">Happy</div></div>
+          </div>
+          <div class="choice-card" data-val="sad" onclick="selectChoice('emotion',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">😢</span>
+            <div><div class="choice-label">Sad</div></div>
+          </div>
+          <div class="choice-card" data-val="fear" onclick="selectChoice('emotion',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">😨</span>
+            <div><div class="choice-label">Fear</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: Outcome + Final Thought -->
+      <div class="step-pane" id="step6">
+        <div class="step-question">Final reflection</div>
+        <p class="onboard-section-label" style="margin-bottom:10px;">Future outcome</p>
+        <div class="toggle-row" id="outcomeCards" style="margin-bottom:20px;">
+          <div class="toggle-card" data-val="beneficial" onclick="selectToggle('outcome',this)">
+            <span class="t-icon">🌱</span>Beneficial
+          </div>
+          <div class="toggle-card" data-val="detrimental" onclick="selectToggle('outcome',this)">
+            <span class="t-icon">⚠️</span>Detrimental
+          </div>
+        </div>
+        <p class="onboard-section-label" style="margin-bottom:10px;">Final thought</p>
+        <div class="choice-grid row" id="finalCards">
+          <div class="choice-card" data-val="continue" onclick="selectChoice('final',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">✅</span>
+            <div><div class="choice-label" style="font-size:12px;">Continue</div></div>
+          </div>
+          <div class="choice-card" data-val="improve" onclick="selectChoice('final',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">✏️</span>
+            <div><div class="choice-label" style="font-size:12px;">Improve</div></div>
+          </div>
+          <div class="choice-card" data-val="discontinue" onclick="selectChoice('final',this)" style="flex-direction:column;text-align:center;gap:6px;">
+            <span class="choice-emoji">🚫</span>
+            <div><div class="choice-label" style="font-size:12px;">Discontinue</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end wizard-body -->
+
+    <div class="wizard-footer">
+      <button class="btn-back" id="wizardBack" onclick="wizardPrev()">← Back</button>
+      <button class="btn-next" id="wizardNext" onclick="wizardNext()" disabled>Next →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+// DATA & STATE
+// ══════════════════════════════════
+let user = null;
+let habits = {}; // { 'YYYY-MM-DD': [...entries] }
+let currentStep = 1;
+let selectedDate = todayStr();
+let activeFilter = 'all';
+const TOTAL_STEPS = 6;
+const MAX_HABITS = 30;
+
+const entry = {
+  activity: '', motive: '', startTime: '', endTime: '',
+  timing: '', manner: '', emotion: '', outcome: '', final: ''
+};
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function formatDate(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'short', month:'short', day:'numeric' });
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+window.onload = () => {
+  user = JSON.parse(localStorage.getItem('hl_user') || 'null');
+  habits = JSON.parse(localStorage.getItem('hl_habits') || '{}');
+
+  if (user) {
+    showApp();
+  } else {
+    const onboard = document.getElementById('screen-onboard');
+    onboard.classList.add('active');
+    onboard.style.display = 'flex';
+  }
+};
+
+// ══════════════════════════════════
+// ONBOARDING
+// ══════════════════════════════════
+let selectedAvatar = '';
+
+function selectAvatar(el) {
+  document.querySelectorAll('.avatar-option').forEach(a => a.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAvatar = el.dataset.avatar;
+}
+
+function completeOnboarding() {
+  const name = document.getElementById('nameInput').value.trim();
+  const err = document.getElementById('onboardError');
+  if (!selectedAvatar || !name) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  user = { name, avatar: selectedAvatar, since: todayStr() };
+  localStorage.setItem('hl_user', JSON.stringify(user));
+  showApp();
+}
+
+// ══════════════════════════════════
+// SCREEN SWITCH
+// ══════════════════════════════════
+function showApp() {
+  const onboard = document.getElementById('screen-onboard');
+  const app = document.getElementById('screen-app');
+  onboard.classList.remove('active');
+  onboard.style.display = 'none';
+  app.classList.add('active');
+  app.style.display = 'flex';
+  setTimeout(() => {
+    refreshDashboard();
+    buildCalendar();
+    renderHistory();
+    refreshProfile();
+  }, 50);
+}
+
+// ══════════════════════════════════
+// TABS
+// ══════════════════════════════════
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+
+  if (tab === 'progress') renderProgress();
+  if (tab === 'history') { buildCalendar(); renderHistory(); }
+  if (tab === 'profile') refreshProfile();
+}
+
+// ══════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════
+function refreshDashboard() {
+  if (!user) return;
+  document.getElementById('dashAvatar').textContent = user.avatar;
+  document.getElementById('dashName').textContent = user.name;
+  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-IN', { weekday:'short', month:'short', day:'numeric' });
+
+  const today = todayStr();
+  const todayHabits = habits[today] || [];
+  const count = todayHabits.length;
+
+  document.getElementById('statToday').textContent = count + '/30';
+  document.getElementById('statTotal').textContent = getAllHabits().length;
+  document.getElementById('statStreak').textContent = calcStreak();
+  document.getElementById('todayCount').textContent = count + ' logged';
+
+  // FAB & limit
+  const fab = document.getElementById('fabBtn');
+  const banner = document.getElementById('limitBanner');
+  if (count >= MAX_HABITS) {
+    fab.classList.add('disabled');
+    banner.style.display = 'block';
+  } else {
+    fab.classList.remove('disabled');
+    banner.style.display = 'none';
+  }
+
+  renderHabitList(todayHabits);
+}
+
+function renderHabitList(list) {
+  const el = document.getElementById('habitList');
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🌱</div><p>No habits logged yet today.<br/>Tap the <strong>+</strong> button to begin.</p></div>`;
+    return;
+  }
+
+  const motiveEmoji = { pleasure:'🍭', pressure:'⚡', goal:'🎯' };
+  const emotionEmoji = { happy:'😊', sad:'😢', fear:'😨' };
+  const finalClass = { continue:'continue', improve:'improve', discontinue:'discontinue' };
+  const finalLabel = { continue:'Continue ✅', improve:'Improve ✏️', discontinue:'Discontinue 🚫' };
+
+  el.innerHTML = list.map((h, i) => `
+    <div class="habit-card ${finalClass[h.final] || ''}" style="animation-delay:${i * 0.05}s">
+      <div class="habit-card-emoji">${emotionEmoji[h.emotion] || '📝'}</div>
+      <div class="habit-card-info">
+        <div class="habit-card-name">${h.activity}</div>
+        <div class="habit-card-meta">${motiveEmoji[h.motive] || ''} ${h.motive} · ${h.startTime}${h.endTime ? ' – ' + h.endTime : ''}</div>
+      </div>
+      <div class="habit-card-badge badge-${finalClass[h.final] || 'continue'}">${finalLabel[h.final] || ''}</div>
+    </div>
+  `).join('');
+}
+
+function getAllHabits() {
+  return Object.values(habits).flat();
+}
+
+function calcStreak() {
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = d.toISOString().split('T')[0];
+    if (habits[key] && habits[key].length > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else break;
+  }
+  return streak;
+}
+
+// ══════════════════════════════════
+// WIZARD
+// ══════════════════════════════════
+function openWizard() {
+  const today = todayStr();
+  if ((habits[today] || []).length >= MAX_HABITS) return;
+
+  // Reset entry
+  Object.keys(entry).forEach(k => entry[k] = '');
+  currentStep = 1;
+
+  // Reset UI
+  document.getElementById('activityInput').value = '';
+  document.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.toggle-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('startTime').value = '';
+  document.getElementById('endTime').value = '';
+
+  updateWizardUI();
+  document.getElementById('wizardOverlay').classList.add('open');
+}
+
+function closeWizard() {
+  document.getElementById('wizardOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('wizardOverlay')) closeWizard();
+}
+
+function updateWizardUI() {
+  // Show correct step
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    document.getElementById('step' + i).classList.toggle('active', i === currentStep);
+  }
+
+  const pct = (currentStep / TOTAL_STEPS) * 100;
+  document.getElementById('wizardProgress').style.width = pct + '%';
+  document.getElementById('wizardStepLabel').textContent = `Step ${currentStep} of ${TOTAL_STEPS}`;
+
+  const titles = ['What did you do?', 'What was your motive?', 'When did you do it?', 'How did you approach it?', 'How did it make you feel?', 'Final reflection'];
+  document.getElementById('wizardStepTitle').textContent = titles[currentStep - 1];
+
+  document.getElementById('wizardBack').style.display = currentStep === 1 ? 'none' : 'block';
+
+  const nextBtn = document.getElementById('wizardNext');
+  if (currentStep === TOTAL_STEPS) {
+    nextBtn.textContent = 'Save Entry ✓';
+    nextBtn.classList.add('btn-save');
+  } else {
+    nextBtn.textContent = 'Next →';
+    nextBtn.classList.remove('btn-save');
+  }
+
+  validateStep();
+}
+
+function validateStep() {
+  let valid = false;
+  switch (currentStep) {
+    case 1: valid = document.getElementById('activityInput').value.trim().length > 0; break;
+    case 2: valid = !!entry.motive; break;
+    case 3: valid = !!document.getElementById('startTime').value && !!document.getElementById('endTime').value && !!entry.timing; break;
+    case 4: valid = !!entry.manner; break;
+    case 5: valid = !!entry.emotion; break;
+    case 6: valid = !!entry.outcome && !!entry.final; break;
+  }
+  document.getElementById('wizardNext').disabled = !valid;
+}
+
+function selectChoice(field, el) {
+  const group = el.parentElement;
+  group.querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  entry[field] = el.dataset.val;
+  validateStep();
+}
+
+function selectToggle(field, el) {
+  const group = el.parentElement;
+  group.querySelectorAll('.toggle-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  entry[field] = el.dataset.val;
+  validateStep();
+}
+
+function wizardNext() {
+  if (currentStep === 1) {
+    entry.activity = document.getElementById('activityInput').value.trim();
+  }
+  if (currentStep === 3) {
+    entry.startTime = document.getElementById('startTime').value;
+    entry.endTime = document.getElementById('endTime').value;
+  }
+  if (currentStep === TOTAL_STEPS) {
+    saveEntry();
+    return;
+  }
+  currentStep++;
+  updateWizardUI();
+}
+
+function wizardPrev() {
+  if (currentStep > 1) { currentStep--; updateWizardUI(); }
+}
+
+function saveEntry() {
+  const today = todayStr();
+  if (!habits[today]) habits[today] = [];
+  habits[today].push({ ...entry, id: Date.now() });
+  localStorage.setItem('hl_habits', JSON.stringify(habits));
+
+  closeWizard();
+  launchConfetti();
+  showToast('Habit logged! 🎉');
+  refreshDashboard();
+}
+
+// ══════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════
+function launchConfetti() {
+  const colors = ['#2D6E6E','#C8762A','#C05050','#5A7A5A','#8A5AC8','#C8A02A'];
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `
+      left: ${Math.random()*100}vw;
+      top: -10px;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      width: ${6+Math.random()*8}px;
+      height: ${6+Math.random()*8}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      animation-duration: ${1.2+Math.random()*1.5}s;
+      animation-delay: ${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(p);
+    p.addEventListener('animationend', () => p.remove());
+  }
+}
+
+// ══════════════════════════════════
+// TOAST
+// ══════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════
+// PROGRESS TAB
+// ══════════════════════════════════
+function renderProgress() {
+  const all = getAllHabits();
+  const body = document.getElementById('progressBody');
+
+  if (!all.length) {
+    body.innerHTML = `<div class="empty-state" style="padding:60px 20px;"><div class="empty-icon">📈</div><p>Log some habits to see<br/>your progress here.</p></div>`;
+    return;
+  }
+
+  // Last 7 days bar chart data
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    days.push({ label: d.toLocaleDateString('en-IN',{weekday:'short'}).slice(0,2), count: (habits[key] || []).length });
+  }
+  const maxCount = Math.max(...days.map(d => d.count), 1);
+
+  const bars = days.map(d => `
+    <div class="bar-col">
+      <div class="bar" style="height:${Math.round((d.count/maxCount)*64)+4}px; opacity:${d.count>0?1:0.25}"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>
+  `).join('');
+
+  // Motive donut
+  const motives = { pleasure: 0, pressure: 0, goal: 0 };
+  all.forEach(h => { if (motives[h.motive] !== undefined) motives[h.motive]++; });
+  const total = all.length;
+  const motiveColors = { pleasure: '#C8762A', pressure: '#C05050', goal: '#2D6E6E' };
+  const motiveLabels = { pleasure: '🍭 Pleasure', pressure: '⚡ Pressure', goal: '🎯 Future Goal' };
+
+  let offset = 0;
+  const segments = Object.entries(motives).map(([k, v]) => {
+    const pct = total ? v / total : 0;
+    const seg = `<circle cx="60" cy="60" r="40" fill="none" stroke="${motiveColors[k]}" stroke-width="20"
+      stroke-dasharray="${pct*251.2} ${251.2}"
+      stroke-dashoffset="${-offset*251.2}"
+      transform="rotate(-90 60 60)"/>`;
+    offset += pct;
+    return { seg, k, v, pct };
+  });
+
+  const donutSVG = `<svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">${segments.map(s=>s.seg).join('')}</svg>`;
+
+  const legend = segments.map(s => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${motiveColors[s.k]}"></div>
+      <span class="legend-label">${motiveLabels[s.k]}</span>
+      <span class="legend-val">${Math.round(s.pct*100)}%</span>
+    </div>
+  `).join('');
+
+  // Final thought breakdown
+  const finals = { continue: 0, improve: 0, discontinue: 0 };
+  all.forEach(h => { if (finals[h.final] !== undefined) finals[h.final]++; });
+
+  const healthItems = Object.entries(finals).map(([k, v]) => {
+    const colors = { continue:'badge-continue', improve:'badge-improve', discontinue:'badge-discontinue' };
+    const icons = { continue:'✅', improve:'✏️', discontinue:'🚫' };
+    return `
+      <div class="health-item">
+        <span style="font-size:20px">${icons[k]}</span>
+        <span class="health-name" style="text-transform:capitalize">${k}</span>
+        <span class="habit-card-badge ${colors[k]}">${v} entries (${total?Math.round(v/total*100):0}%)</span>
+      </div>
+    `;
+  }).join('');
+
+  // Manner stats
+  const focused = all.filter(h => h.manner === 'focused').length;
+  const distracted = all.filter(h => h.manner === 'distracted').length;
+  const focusPct = total ? Math.round(focused/total*100) : 0;
+
+  body.innerHTML = `
+    <div class="chart-card">
+      <div class="chart-title">📅 Habits Logged — Last 7 Days</div>
+      <div class="bar-chart">${bars}</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">🎯 Motive Breakdown</div>
+      <div class="donut-wrap">
+        ${donutSVG}
+        <div class="donut-legend">${legend}</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">🧠 Focus Rate</div>
+      <div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px">
+          <span>Focused & Disciplined</span><span style="font-weight:700;color:var(--teal-dark)">${focusPct}%</span>
+        </div>
+        <div style="background:var(--parchment);border-radius:6px;height:10px;overflow:hidden">
+          <div style="width:${focusPct}%;height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:6px;transition:width 1s"></div>
+        </div>
+        <div style="font-size:12px;color:var(--ink-muted);margin-top:6px">${focused} focused · ${distracted} distracted</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">🔮 Final Thought Breakdown</div>
+      <div class="health-list">${healthItems}</div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════
+// HISTORY TAB
+// ══════════════════════════════════
+function buildCalendar() {
+  const strip = document.getElementById('calendarStrip');
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d);
+  }
+
+  strip.innerHTML = days.map(d => {
+    const key = d.toISOString().split('T')[0];
+    const isSelected = key === selectedDate;
+    const hasData = habits[key] && habits[key].length > 0;
+    return `
+      <div class="cal-day ${isSelected?'selected':''} ${hasData?'has-data':''}" onclick="selectCalDay('${key}',this)">
+        <div class="day-name">${d.toLocaleDateString('en-IN',{weekday:'short'}).slice(0,2)}</div>
+        <div class="day-num">${d.getDate()}</div>
+        <div class="day-dot"></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectCalDay(key, el) {
+  selectedDate = key;
+  document.querySelectorAll('.cal-day').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  renderHistory();
+}
+
+function setFilter(el, filter) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  let entries = habits[selectedDate] || [];
+
+  if (activeFilter !== 'all') {
+    entries = entries.filter(h => h.final === activeFilter || h.motive === activeFilter);
+  }
+
+  if (!entries.length) {
+    list.innerHTML = `<div class="empty-state" style="padding:40px 0"><div class="empty-icon">📭</div><p>No entries for ${formatDate(selectedDate)}.</p></div>`;
+    return;
+  }
+
+  const motiveEmoji = { pleasure:'🍭', pressure:'⚡', goal:'🎯' };
+  const motiveLabel = { pleasure:'Pleasure', pressure:'Pressure', goal:'Future Goal' };
+  const emotionEmoji = { happy:'😊', sad:'😢', fear:'😨' };
+  const outcomeLabel = { beneficial:'🌱 Beneficial', detrimental:'⚠️ Detrimental' };
+  const finalLabel = { continue:'✅ Continue', improve:'✏️ Improve', discontinue:'🚫 Discontinue' };
+  const timingLabel = { right:'✅ Right time', wrong:'⏰ Wrong time' };
+  const mannerLabel = { focused:'🎯 Focused', distracted:'🌀 Distracted' };
+
+  list.innerHTML = entries.map((h, i) => `
+    <div class="history-entry" onclick="toggleDetail(this)">
+      <div class="history-entry-top">
+        <div class="history-entry-name">${emotionEmoji[h.emotion] || '📝'} ${h.activity}</div>
+        <div class="history-entry-time">${h.startTime} – ${h.endTime}</div>
+      </div>
+      <div class="history-entry-chips">
+        <span class="mini-chip chip-motive">${motiveEmoji[h.motive]} ${motiveLabel[h.motive]}</span>
+        <span class="mini-chip chip-outcome">${outcomeLabel[h.outcome] || h.outcome}</span>
+        <span class="mini-chip chip-final">${finalLabel[h.final] || h.final}</span>
+      </div>
+      <div class="entry-detail">
+        <div class="detail-row"><span class="detail-key">Timing</span><span class="detail-val">${timingLabel[h.timing]||h.timing}</span></div>
+        <div class="detail-row"><span class="detail-key">Manner</span><span class="detail-val">${mannerLabel[h.manner]||h.manner}</span></div>
+        <div class="detail-row"><span class="detail-key">Emotion</span><span class="detail-val">${emotionEmoji[h.emotion]} ${h.emotion}</span></div>
+        <div class="detail-row"><span class="detail-key">Outcome</span><span class="detail-val">${outcomeLabel[h.outcome]||h.outcome}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDetail(el) {
+  el.querySelector('.entry-detail').classList.toggle('open');
+}
+
+// ══════════════════════════════════
+// PROFILE TAB
+// ══════════════════════════════════
+function refreshProfile() {
+  if (!user) return;
+  document.getElementById('profileAvatarLg').textContent = user.avatar;
+  document.getElementById('profileName').textContent = user.name;
+  document.getElementById('profileSince').textContent = 'Tracking since ' + formatDate(user.since || todayStr());
+
+  const all = getAllHabits();
+  const days = Object.keys(habits).filter(k => habits[k].length > 0).length;
+  const cont = all.filter(h => h.final === 'continue').length;
+  const contPct = all.length ? Math.round(cont/all.length*100) : 0;
+
+  document.getElementById('profileTotal').textContent = all.length;
+  document.getElementById('profileDays').textContent = days;
+  document.getElementById('profileStreak').textContent = calcStreak();
+  document.getElementById('profileContinue').textContent = contPct + '%';
+}
+
+function editName() {
+  const name = prompt('Enter new name:', user.name);
+  if (name && name.trim()) {
+    user.name = name.trim();
+    localStorage.setItem('hl_user', JSON.stringify(user));
+    refreshProfile();
+    refreshDashboard();
+    showToast('Name updated!');
+  }
+}
+
+function resetApp() {
+  if (confirm('Reset ALL data? This cannot be undone.')) {
+    localStorage.removeItem('hl_user');
+    localStorage.removeItem('hl_habits');
+    location.reload();
+  }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+</body>
+</html>
